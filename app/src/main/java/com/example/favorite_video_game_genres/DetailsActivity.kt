@@ -1,7 +1,6 @@
 package com.example.favorite_video_game_genres
 
 import android.os.Bundle
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,11 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
-import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
-
-class MainActivity : ComponentActivity() {
+class DetailsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.details_main)
     }
 }

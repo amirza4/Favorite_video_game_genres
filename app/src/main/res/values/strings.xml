@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Favorite_video_game_genres</string>
+    <string name="labelName">Please check from the following checklist of your Favorite Video Game Genres:</string>
+    <string name="preference_file_key">com.example.favorite_video_game_genres.PREFERENCE_FILE_KEY</string>
 </resources>
