@@ -40,7 +40,7 @@ class DetailsActivity : ComponentActivity() {
     @Composable
     fun createScreen() {
         Text(
-            text = stringResource(id = R.string.labelName),
+            text = stringResource(R.string.labelName),
             textAlign = TextAlign.Center,
             modifier = Modifier
                 .fillMaxWidth()
