@@ -52,29 +52,29 @@ class DetailsActivity : ComponentActivity() {
                 fontFamily = FontFamily.SansSerif
             )
         )
-        val (isPC, onStateChange) = remember { mutableStateOf(false) }
+        val (isActionGame, onStateChange) = remember { mutableStateOf(false) }
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .toggleable(
-                    value = isPC,
-                    onValueChange = { onStateChange(!isPC) },
+                    value = isActionGame,
+                    onValueChange = { onStateChange(!isActionGame) },
                     role = Role.Checkbox
                 )
                 .padding(start = 30.dp, top = 150.dp)
         )
         {
             Checkbox(
-                checked = isPC,
+                checked = isActionGame,
                 onCheckedChange = null,
             )
             Text(
-                text = "PC",
-                style = TextStyle(fontSize = 20.sp, fontFamily = FontFamily.SansSerif)
-            )
+                text = "Action Game",
+                style = TextStyle(fontSize = 20.sp, fontFamily = FontFamily.SansSerif, color = Color.Red)
+            ) // NEED TO HAMMER OUT MORE CHECKBOXES FOR OTHER CHOICES
         }
         Button(
-            onClick = { /* Navigate to Details Activity */ },
+            onClick = { /* Navigate back to Main Activity */ },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Green
             ),
