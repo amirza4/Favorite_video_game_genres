@@ -70,11 +70,11 @@ class DetailsActivity : ComponentActivity() {
             )
             Text(
                 text = "Action Game",
-                style = TextStyle(fontSize = 20.sp, fontFamily = FontFamily.SansSerif)
+                style = TextStyle(fontSize = 20.sp, fontFamily = FontFamily.SansSerif, color = Color.Red)
             ) // NEED TO HAMMER OUT MORE CHECKBOXES FOR OTHER CHOICES
         }
         Button(
-            onClick = { /* Navigate to Details Activity */ },
+            onClick = { /* Navigate back to Main Activity */ },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Green
             ),
