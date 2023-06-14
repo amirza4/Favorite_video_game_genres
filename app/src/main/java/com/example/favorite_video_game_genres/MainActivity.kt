@@ -34,6 +34,7 @@ class MainActivity : ComponentActivity() {
             // Access a Cloud Firestore instance from your Activity
             val db = FirebaseFirestore.getInstance()
 
+            val test = db.collection("users")
 // Create a new user with a first, middle, and last name
             val user = hashMapOf(
                 "first" to "Alan",
@@ -41,6 +42,8 @@ class MainActivity : ComponentActivity() {
                 "last" to "Turing",
                 "born" to 1912,
             )
+           test.document("first").set(test)
+
             db.collection("users")
                 .add(user)
                 .addOnSuccessListener { documentReference ->
