@@ -1,6 +1,8 @@
 package com.example.favorite_video_game_genres
 
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Canvas
@@ -22,16 +24,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent{
             // Access a Cloud Firestore instance from your Activity
+            val db = FirebaseFirestore.getInstance()
 
-            val db = Firebase.firestore
+// Create a new user with a first, middle, and last name
+            val user = hashMapOf(
+                "first" to "Alan",
+                "middle" to "Mathison",
+                "last" to "Turing",
+                "born" to 1912,
+            )
+            db.collection("users")
+                .add(user)
+                .addOnSuccessListener { documentReference ->
+                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                }
+                .addOnFailureListener { e ->
+                    Log.w(TAG, "Error adding document", e)
+                }
             createScreen()
         }
     }
