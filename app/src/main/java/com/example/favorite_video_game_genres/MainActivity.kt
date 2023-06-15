@@ -2,6 +2,7 @@ package com.example.favorite_video_game_genres
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,22 +19,22 @@ import androidx.compose.material3.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.foundation.*
-import androidx.compose.foundation.selection.toggleable
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.material3.Button
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.semantics.Role
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
+
 
 //import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent{
+        setContent {
             val navController = rememberNavController()
 
             NavHost(
@@ -52,24 +53,30 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
     @SuppressLint("SuspiciousIndentation")
     @Composable
-    fun DisplayScreen(navController: NavController)
-    {
-        var barChartTestData:Array<Pair<String, Float>> = arrayOf(Pair("Action Games", 10f), Pair("Adventure Games", 40f), Pair("RPG", 50f), Pair("FPS Games", 30f))
-        barChartTestData += Pair("MOBA Games", 20f)
-        barChartTestData += Pair("Sport Games", 60f)
-        barChartTestData += Pair("Sandbox Games", 80f)
-        barChartTestData += Pair("Trivia Games", 10f)
-        barChartTestData += Pair("Board Games", 70f)
-        barChartTestData += Pair("Indie Games", 30f)
-        barChartTestData += Pair("Racing Games", 80f)
-        barChartTestData += Pair("MMORPG's", 120f)
+    fun DisplayScreen(navController: NavController) {
+        var barGraphData: Array<Pair<String, Float>> = arrayOf(
+            Pair("Action Games", 10f),
+            Pair("Adventure Games", 40f),
+            Pair("RPG", 50f),
+            Pair("FPS Games", 30f),
+            Pair("MOBA Games", 20f),
+            Pair("Sport Games", 60f),
+            Pair("Sandbox Games", 80f),
+            Pair("Trivia Games", 10f),
+            Pair("Board Games", 70f),
+            Pair("Indie Games", 30f),
+            Pair("Racing Games", 80f),
+            Pair("MMORPG's", 120f)
+        )
 
-            Column(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(android.graphics.Color.parseColor("#fff68f"))))
+                .background(Color(android.graphics.Color.parseColor("#fff68f")))
+        )
         {
             Text(
                 text = "Favorite Video Game Genres",
@@ -85,8 +92,8 @@ class MainActivity : ComponentActivity() {
                     .padding(top = 30.dp, bottom = 20.dp)
                     .align(Alignment.CenterHorizontally)
             )
-            barChartTestData.forEach { value ->
-                var width by  remember { mutableStateOf(0f) }
+            barGraphData.forEach { value ->
+                var width by remember { mutableStateOf(0f) }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -100,10 +107,14 @@ class MainActivity : ComponentActivity() {
                             .padding(start = 125.dp)
                     )
                     {
-                        width = (size.width - 216.dp.toPx()) * (value.second / barChartTestData.maxOfOrNull { it.second }!!)
+                        width =
+                            (size.width - 216.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!)
                         drawRect(
                             color = Color(android.graphics.Color.parseColor("#88b04b")),
-                            size = Size((size.width - 40.dp.toPx()) * (value.second / barChartTestData.maxOfOrNull { it.second }!!), size.height),
+                            size = Size(
+                                (size.width - 40.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!),
+                                size.height
+                            ),
                         )
                     }
                     Text(
@@ -157,67 +168,93 @@ class MainActivity : ComponentActivity() {
     }
 
     @Composable
-    fun InputScreen(navController: NavController)
-    {
-        Text(
-            text = stringResource(R.string.labelName),
-            textAlign = TextAlign.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 35.dp, start = 20.dp, end = 20.dp),
-            style = TextStyle(
-                color = Color(android.graphics.Color.parseColor("#0089FF")),
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.SansSerif
-            )
-        )
-        val (isActionGame, onStateChange) = remember { mutableStateOf(false) }
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .toggleable(
-                    value = isActionGame,
-                    onValueChange = { onStateChange(!isActionGame) },
-                    role = Role.Checkbox
-                )
-                .padding(start = 30.dp, top = 150.dp)
-        )
-        {
-            Checkbox(
-                checked = isActionGame,
-                onCheckedChange = null,
-            )
-            Text(
-                text = "Action Game",
-                style = TextStyle(fontSize = 20.sp, fontFamily = FontFamily.SansSerif, color = Color.Red)
-            ) // NEED TO HAMMER OUT MORE CHECKBOXES FOR OTHER CHOICES
-        }
-        Button(
-            onClick =
-            {
-                navController.navigate("DisplayScreen")
-                {
-                    popUpTo("InputScreen")
-                }
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Green
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 740.3.dp, bottom = 16.dp, start = 60.dp, end = 60.dp)
-        )
+    fun InputScreen(navController: NavController) {
+        Box(modifier = Modifier.background(Color(android.graphics.Color.parseColor("#fff68f"))))
         {
             Text(
-                text = "Submit",
+                text = stringResource(R.string.labelName),
                 textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 35.dp, start = 20.dp, end = 20.dp),
                 style = TextStyle(
-                    color = Color.Red,
-                    fontSize = 18.sp,
+                    color = Color(android.graphics.Color.parseColor("#0089FF")),
+                    fontSize = 22.sp,
+                    fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif
                 )
             )
+            val options :Array<String> = arrayOf(
+                "Action Games",
+                "Adventure Games",
+                "RPG (Role-Playing Games)",
+                "FPS Games (First Person Shooters)",
+                "MOBA Games (Multiplayer Online Battle Arena)",
+                "Sport Games",
+                "Sandbox Games",
+                "Trivia Games",
+                "Board Games",
+                "Indie Games",
+                "Racing Games",
+                "MMORPG's (Massive Multiplayer Online Role-Playing Games)"
+            )
+            var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12){false}) }
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 30.dp, top = 130.dp)
+            )
+            {
+                items(12) { i ->
+                    var isChecked by remember { mutableStateOf(false) }
+                    Row() {
+                        Checkbox(
+                            checked = isChecked,
+                            onCheckedChange = { isChecked = !isChecked},
+                        )
+                        Text(
+                            text = options[i],
+                            style = TextStyle(
+                                fontSize = 20.sp,
+                                fontFamily = FontFamily.SansSerif,
+                                color = Color.Red
+                            ),
+                            modifier = Modifier
+                                .padding(top = 8.dp)
+                        )
+                        //checked[i] = isChecked
+                    }
+                    //Log.d("Tag1", "The button is checked: $isChecked")
+                    checked.value[i] = isChecked
+                }
+            }
+            Button(
+                onClick =
+                {
+                    navController.navigate("DisplayScreen")
+                    {
+                        popUpTo("InputScreen")
+                    }
+                    Log.d("Tag2", "Is this specific button checked? : ${checked.value[2]}")
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Green
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 740.3.dp, bottom = 16.dp, start = 60.dp, end = 60.dp)
+            )
+            {
+                Text(
+                    text = "Submit",
+                    textAlign = TextAlign.Center,
+                    style = TextStyle(
+                        color = Color.Red,
+                        fontSize = 18.sp,
+                        fontFamily = FontFamily.SansSerif
+                    )
+                )
+            }
         }
     }
 }
