@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "381757398135",
+    "project_id": "favorite-video-game-genr-bbd8b",
+    "storage_bucket": "favorite-video-game-genr-bbd8b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:381757398135:android:c24d068e73c7646ada7a72",
+        "android_client_info": {
+          "package_name": "com.example.favorite_video_game_genres"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "381757398135-n8t981hs781i5ugq5h9npgqgr9q9uup9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxch69Nzdl0pKPnLpkPp-layUMWD0j4FI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "381757398135-n8t981hs781i5ugq5h9npgqgr9q9uup9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
