@@ -58,18 +58,18 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DisplayScreen(navController: NavController) {
         var barGraphData: Array<Pair<String, Float>> = arrayOf(
-            Pair("Action Games", 10f),
-            Pair("Adventure Games", 40f),
-            Pair("RPG", 50f),
-            Pair("FPS Games", 30f),
-            Pair("MOBA Games", 20f),
-            Pair("Sport Games", 60f),
-            Pair("Sandbox Games", 80f),
-            Pair("Trivia Games", 10f),
-            Pair("Board Games", 70f),
-            Pair("Indie Games", 30f),
-            Pair("Racing Games", 80f),
-            Pair("MMORPG's", 120f)
+            Pair("Action Games", 1f),
+            Pair("Adventure Games", 4f),
+            Pair("RPG", 1f),
+            Pair("FPS Games", 3f),
+            Pair("MOBA Games", 2f),
+            Pair("Sport Games", 6f),
+            Pair("Sandbox Games", 8f),
+            Pair("Trivia Games", 1f),
+            Pair("Board Games", 7f),
+            Pair("Indie Games", 3f),
+            Pair("Racing Games", 8f),
+            Pair("MMORPG's", 12f)
         )
 
         Column(
@@ -242,7 +242,7 @@ class MainActivity : ComponentActivity() {
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 740.3.dp, bottom = 16.dp, start = 60.dp, end = 60.dp)
+                    .padding(top = 740.3.dp, bottom = 39.dp, start = 60.dp, end = 60.dp)
             )
             {
                 Text(
