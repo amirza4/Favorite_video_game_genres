@@ -47,32 +47,57 @@ import com.google.firebase.firestore.FirebaseFirestore
 //import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
 
 class MainActivity : ComponentActivity() {
+
+    private var retrieveData by mutableStateOf(Array<Float>(12){10f})
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent {
 
             // Access a Cloud Firestore instance from your Activity
+//            val db = FirebaseFirestore.getInstance()
+//
+//            val test = db.collection("users")
+            // Create a new user with a first, middle, and last name
+//            val user = hashMapOf(
+//                "first" to "Alan",
+//                "middle" to "Mathison",
+//                "last" to "Turing",
+//                "born" to 1912,
+//            )
+//           test.document("first").set(user)
+
+//            db.collection("users")
+//                .add(user)
+//                .addOnSuccessListener { documentReference ->
+//                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+//                }
+//                .addOnFailureListener { e ->
+//                    Log.w(TAG, "Error adding document", e)
+//                }
+
             val db = FirebaseFirestore.getInstance()
 
-            val test = db.collection("users")
-            // Create a new user with a first, middle, and last name
-            val user = hashMapOf(
-                "first" to "Alan",
-                "middle" to "Mathison",
-                "last" to "Turing",
-                "born" to 1912,
-            )
-           test.document("first").set(test)
-
-            db.collection("users")
-                .add(user)
-                .addOnSuccessListener { documentReference ->
-                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            val graphData = db.collection("game_counts").document("84c8g5rVr8KJliP4108c").get()
+                .addOnSuccessListener { document ->
+                    val data = document.data
+                    retrieveData[0] = (data!!["Action Games"]).toString().toFloat()
+                    retrieveData[1] = (data!!["Adventure Games"]).toString().toFloat()
+                    retrieveData[2] = (data!!["Board Games"]).toString().toFloat()
+                    retrieveData[3] = (data!!["FPS"]).toString().toFloat()
+                    retrieveData[4] = (data!!["Indie"]).toString().toFloat()
+                    retrieveData[5] = (data!!["MMORPG"]).toString().toFloat()
+                    retrieveData[6] = (data!!["MOBA"]).toString().toFloat()
+                    retrieveData[7] = (data!!["RPG"]).toString().toFloat()
+                    retrieveData[8] = (data!!["Racing Games"]).toString().toFloat()
+                    retrieveData[9] = (data!!["Sandbox"]).toString().toFloat()
+                    retrieveData[10] = (data!!["Sport Games"]).toString().toFloat()
+                    retrieveData[11] = (data!!["Trivia"]).toString().toFloat()
                 }
-                .addOnFailureListener { e ->
-                    Log.w(TAG, "Error adding document", e)
+                .addOnFailureListener {exception ->
+                    Log.d("errorTag", "Pulling data failed : ", exception)
                 }
 
+        setContent {
 
             val navController = rememberNavController()
 
@@ -96,19 +121,20 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("SuspiciousIndentation")
     @Composable
     fun DisplayScreen(navController: NavController) {
+
         var barGraphData: Array<Pair<String, Float>> = arrayOf(
-            Pair("Action Games", 1f),
-            Pair("Adventure Games", 4f),
-            Pair("RPG", 1f),
-            Pair("FPS Games", 3f),
-            Pair("MOBA Games", 2f),
-            Pair("Sport Games", 6f),
-            Pair("Sandbox Games", 8f),
-            Pair("Trivia Games", 1f),
-            Pair("Board Games", 7f),
-            Pair("Indie Games", 3f),
-            Pair("Racing Games", 8f),
-            Pair("MMORPG's", 12f)
+            Pair("Action Games", retrieveData[0]),
+            Pair("Adventure Games", retrieveData[1]),
+            Pair("Board Games", retrieveData[2]),
+            Pair("FPS Games", retrieveData[3]),
+            Pair("Indie Games", retrieveData[4]),
+            Pair("MMORPG's", retrieveData[5]),
+            Pair("MOBA Games", retrieveData[6]),
+            Pair("RPG", retrieveData[7]),
+            Pair("Racing Games", retrieveData[8]),
+            Pair("Sandbox Games", retrieveData[9]),
+            Pair("Sport Games", retrieveData[10]),
+            Pair("Trivia Games", retrieveData[11])
         )
 
         Column(
@@ -208,6 +234,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun InputScreen(navController: NavController) {
+        var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12){false}) }
         Box(modifier = Modifier.background(Color(android.graphics.Color.parseColor("#fff68f"))))
         {
             Text(
@@ -226,18 +253,17 @@ class MainActivity : ComponentActivity() {
             val options :Array<String> = arrayOf(
                 "Action Games",
                 "Adventure Games",
-                "RPG (Role-Playing Games)",
-                "FPS Games (First Person Shooters)",
-                "MOBA Games (Multiplayer Online Battle Arena)",
-                "Sport Games",
-                "Sandbox Games",
-                "Trivia Games",
                 "Board Games",
+                "FPS Games (First Person Shooters)",
                 "Indie Games",
+                "MMORPG's (Massive Multiplayer Online Role-Playing Games)",
+                "MOBA Games (Multiplayer Online Battle Arena)",
+                "RPG (Role-Playing Games)",
                 "Racing Games",
-                "MMORPG's (Massive Multiplayer Online Role-Playing Games)"
+                "Sandbox Games",
+                "Sport Games",
+                "Trivia Games",
             )
-            var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12){false}) }
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -274,7 +300,33 @@ class MainActivity : ComponentActivity() {
                     {
                         popUpTo("InputScreen")
                     }
-                    Log.d("Tag2", "Is this specific button checked? : ${checked.value[2]}")
+
+                    //Log.d("Tag2", "Is this specific button checked? : ${checked.value[2]}")
+
+                    val db = FirebaseFirestore.getInstance()
+
+                    for((i, value) in checked.value.withIndex())
+                    {
+                        if(value)
+                        {
+                            retrieveData[i]++;
+                        }
+                    }
+                    Log.d("checkTag", "Action Game votes -------------" + retrieveData[0])
+
+                    val graphData = db.collection("game_counts").document("84c8g5rVr8KJliP4108c")
+                    graphData.update("Action Games", retrieveData[0])
+                    graphData.update("Adventure Games", retrieveData[1])
+                    graphData.update("Board Games", retrieveData[2])
+                    graphData.update("FPS", retrieveData[3])
+                    graphData.update("Indie", retrieveData[4])
+                    graphData.update("MMORPG", retrieveData[5])
+                    graphData.update("MOBA", retrieveData[6])
+                    graphData.update("RPG", retrieveData[7])
+                    graphData.update("Racing Games", retrieveData[8])
+                    graphData.update("Sandbox", retrieveData[9])
+                    graphData.update("Sport Games", retrieveData[10])
+                    graphData.update("Trivia", retrieveData[11])
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Green
