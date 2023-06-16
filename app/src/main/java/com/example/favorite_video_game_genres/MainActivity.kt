@@ -29,12 +29,14 @@ import androidx.compose.material3.*
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.material3.Button
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import androidx.compose.ui.unit.dp
@@ -48,26 +50,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            val navController = rememberNavController()
 
-            NavHost(
-                navController = navController,
-                startDestination = "DisplayScreen"
-            )
-            {
-                composable("DisplayScreen")
-                {
-                    DisplayScreen(navController = navController)
-                }
-                composable("InputScreen")
-                {
-                    InputScreen(navController = navController)
-                }
             // Access a Cloud Firestore instance from your Activity
             val db = FirebaseFirestore.getInstance()
 
             val test = db.collection("users")
-// Create a new user with a first, middle, and last name
+            // Create a new user with a first, middle, and last name
             val user = hashMapOf(
                 "first" to "Alan",
                 "middle" to "Mathison",
@@ -84,6 +72,24 @@ class MainActivity : ComponentActivity() {
                 .addOnFailureListener { e ->
                     Log.w(TAG, "Error adding document", e)
                 }
+
+
+            val navController = rememberNavController()
+
+            NavHost(
+                navController = navController,
+                startDestination = "DisplayScreen"
+            )
+            {
+                composable("DisplayScreen")
+                {
+                    DisplayScreen(navController = navController)
+                }
+                composable("InputScreen")
+                {
+                    InputScreen(navController = navController)
+                }
+            }
         }
     }
 
