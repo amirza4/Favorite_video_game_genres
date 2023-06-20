@@ -50,14 +50,40 @@ class MainActivity : ComponentActivity() {
 
     private var retrieveData by mutableStateOf(Array<Float>(12){10f})
 
+    //Function runs first for retriving the data from firestore
+    private fun fetchFromFireBase(callback: () -> Unit) {
+        val db = FirebaseFirestore.getInstance()
+
+        db.collection("game_counts").document("84c8g5rVr8KJliP4108c").get()
+            .addOnSuccessListener { document ->
+                val data = document.data
+                retrieveData[0] = (data!!["Action Games"]).toString().toFloat()
+                retrieveData[1] = (data!!["Adventure Games"]).toString().toFloat()
+                retrieveData[2] = (data!!["Board Games"]).toString().toFloat()
+                retrieveData[3] = (data!!["FPS"]).toString().toFloat()
+                retrieveData[4] = (data!!["Indie"]).toString().toFloat()
+                retrieveData[5] = (data!!["MMORPG"]).toString().toFloat()
+                retrieveData[6] = (data!!["MOBA"]).toString().toFloat()
+                retrieveData[7] = (data!!["RPG"]).toString().toFloat()
+                retrieveData[8] = (data!!["Racing Games"]).toString().toFloat()
+                retrieveData[9] = (data!!["Sandbox"]).toString().toFloat()
+                retrieveData[10] = (data!!["Sport Games"]).toString().toFloat()
+                retrieveData[11] = (data!!["Trivia"]).toString().toFloat()
+                callback()
+            }
+            .addOnFailureListener {exception ->
+                Log.d("errorTag", "Pulling data failed : ", exception)
+            }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-            // Access a Cloud Firestore instance from your Activity
+        // Access a Cloud Firestore instance from your Activity
 //            val db = FirebaseFirestore.getInstance()
 //
 //            val test = db.collection("users")
-            // Create a new user with a first, middle, and last name
+        // Create a new user with a first, middle, and last name
 //            val user = hashMapOf(
 //                "first" to "Alan",
 //                "middle" to "Mathison",
@@ -75,44 +101,25 @@ class MainActivity : ComponentActivity() {
 //                    Log.w(TAG, "Error adding document", e)
 //                }
 
-            val db = FirebaseFirestore.getInstance()
 
-            val graphData = db.collection("game_counts").document("84c8g5rVr8KJliP4108c").get()
-                .addOnSuccessListener { document ->
-                    val data = document.data
-                    retrieveData[0] = (data!!["Action Games"]).toString().toFloat()
-                    retrieveData[1] = (data!!["Adventure Games"]).toString().toFloat()
-                    retrieveData[2] = (data!!["Board Games"]).toString().toFloat()
-                    retrieveData[3] = (data!!["FPS"]).toString().toFloat()
-                    retrieveData[4] = (data!!["Indie"]).toString().toFloat()
-                    retrieveData[5] = (data!!["MMORPG"]).toString().toFloat()
-                    retrieveData[6] = (data!!["MOBA"]).toString().toFloat()
-                    retrieveData[7] = (data!!["RPG"]).toString().toFloat()
-                    retrieveData[8] = (data!!["Racing Games"]).toString().toFloat()
-                    retrieveData[9] = (data!!["Sandbox"]).toString().toFloat()
-                    retrieveData[10] = (data!!["Sport Games"]).toString().toFloat()
-                    retrieveData[11] = (data!!["Trivia"]).toString().toFloat()
-                }
-                .addOnFailureListener {exception ->
-                    Log.d("errorTag", "Pulling data failed : ", exception)
-                }
+        fetchFromFireBase {
+            setContent {
 
-        setContent {
+                val navController = rememberNavController()
 
-            val navController = rememberNavController()
-
-            NavHost(
-                navController = navController,
-                startDestination = "DisplayScreen"
-            )
-            {
-                composable("DisplayScreen")
+                NavHost(
+                    navController = navController,
+                    startDestination = "DisplayScreen"
+                )
                 {
-                    DisplayScreen(navController = navController)
-                }
-                composable("InputScreen")
-                {
-                    InputScreen(navController = navController)
+                    composable("DisplayScreen")
+                    {
+                        DisplayScreen(navController = navController)
+                    }
+                    composable("InputScreen")
+                    {
+                        InputScreen(navController = navController)
+                    }
                 }
             }
         }
@@ -312,7 +319,6 @@ class MainActivity : ComponentActivity() {
                             retrieveData[i]++;
                         }
                     }
-                    Log.d("checkTag", "Action Game votes -------------" + retrieveData[0])
 
                     val graphData = db.collection("game_counts").document("84c8g5rVr8KJliP4108c")
                     graphData.update("Action Games", retrieveData[0])
