@@ -30,7 +30,6 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.material3.Button
@@ -42,6 +41,8 @@ import androidx.navigation.compose.*
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.compose.foundation.lazy.*
+import androidx.compose.ui.platform.LocalConfiguration
 
 
 //import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
@@ -129,7 +130,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DisplayScreen(navController: NavController) {
 
-        var barGraphData: Array<Pair<String, Float>> = arrayOf(
+        val barGraphData: Array<Pair<String, Float>> = arrayOf(
             Pair("Action Games", retrieveData[0]),
             Pair("Adventure Games", retrieveData[1]),
             Pair("Board Games", retrieveData[2]),
@@ -144,10 +145,13 @@ class MainActivity : ComponentActivity() {
             Pair("Trivia Games", retrieveData[11])
         )
 
+        val state = rememberScrollState()
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color(android.graphics.Color.parseColor("#fff68f")))
+                .verticalScroll(state)
         )
         {
             Text(
@@ -161,11 +165,10 @@ class MainActivity : ComponentActivity() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 30.dp, bottom = 20.dp)
+                    .padding(top = 20.dp, bottom = 20.dp)
                     .align(Alignment.CenterHorizontally)
             )
             barGraphData.forEach { value ->
-                var width by remember { mutableStateOf(0f) }
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -179,8 +182,6 @@ class MainActivity : ComponentActivity() {
                             .padding(start = 125.dp)
                     )
                     {
-                        width =
-                            (size.width - 40.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!)
                         drawRect(
                             color = Color(android.graphics.Color.parseColor("#88b04b")),
                             size = Size(
@@ -200,10 +201,9 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(top = 3.dp, start = 5.dp)
                     )
                     Text(
-                        //Spacing issue is with line 206, and with line 183 -- use text = on the next line to see the values of width, or anything else
                         text = value.second.toInt().toString(),
                         modifier = Modifier
-                            .padding(start = width.dp + 130.dp, top = 5.dp),
+                            .padding(start = 130.dp, top = 5.dp),
                         style = TextStyle(
                             color = Color(android.graphics.Color.parseColor("#F28C28")),
                             fontSize = 14.sp,
@@ -243,14 +243,17 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun InputScreen(navController: NavController) {
         var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12){false}) }
-        Box(modifier = Modifier.background(Color(android.graphics.Color.parseColor("#fff68f"))))
+        Column(modifier = Modifier
+            .background(Color(android.graphics.Color.parseColor("#fff68f")))
+            .fillMaxSize()
+            )
         {
             Text(
                 text = stringResource(R.string.labelName),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 35.dp, start = 20.dp, end = 20.dp),
+                    .padding(top = 25.dp, start = 20.dp, end = 20.dp),
                 style = TextStyle(
                     color = Color(android.graphics.Color.parseColor("#0089FF")),
                     fontSize = 22.sp,
@@ -272,10 +275,33 @@ class MainActivity : ComponentActivity() {
                 "Sport Games",
                 "Trivia Games",
             )
+            /* Phone height sizes
+            3.3 WQVGA - 533.0.dp
+            Nexus 5 - 616.0.dp
+            Pixel 3 - 737.0.dp
+            Pixel 6 - 829.0.dp
+            8 Foldout - 945.0.dp
+            */
+            val getScreenHeight = LocalConfiguration.current.screenHeightDp.dp
+            var listHeight:Dp = 0.dp
+            if(getScreenHeight < 600.0.dp)
+            {
+                listHeight = (getScreenHeight * .5f)
+            }
+            else if(getScreenHeight >= 600.0.dp && getScreenHeight < 700.0.dp)
+            {
+                listHeight = (getScreenHeight * .6f)
+            }
+            else if(getScreenHeight >= 700.dp)
+            {
+                listHeight = (getScreenHeight * .7f)
+            }
+            Log.d("TagHIHI", "$listHeight----------------${getScreenHeight}")
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 30.dp, top = 130.dp)
+                    .padding(start = 30.dp, top = 20.dp)
+                    .height(listHeight)
             )
             {
                 items(12) { i ->
@@ -317,7 +343,7 @@ class MainActivity : ComponentActivity() {
                     {
                         if(value)
                         {
-                            retrieveData[i]++;
+                            retrieveData[i]++
                         }
                     }
 
@@ -340,7 +366,8 @@ class MainActivity : ComponentActivity() {
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 740.3.dp, bottom = 39.dp, start = 60.dp, end = 60.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(top = 20.dp, start = 60.dp, end = 60.dp)
             )
             {
                 Text(
