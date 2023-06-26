@@ -180,7 +180,7 @@ class MainActivity : ComponentActivity() {
                     )
                     {
                         width =
-                            (size.width - 216.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!)
+                            (size.width - 40.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!)
                         drawRect(
                             color = Color(android.graphics.Color.parseColor("#88b04b")),
                             size = Size(
@@ -200,6 +200,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(top = 3.dp, start = 5.dp)
                     )
                     Text(
+                        //Spacing issue is with line 206, and with line 183 -- use text = on the next line to see the values of width, or anything else
                         text = value.second.toInt().toString(),
                         modifier = Modifier
                             .padding(start = width.dp + 130.dp, top = 5.dp),
