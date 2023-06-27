@@ -7,7 +7,6 @@ import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -347,14 +346,18 @@ class MainActivity : ComponentActivity() {
         }
     }
     @Composable
-    fun Switch(
-        checked: Boolean,
-        onCheckedChange: ((Boolean) -> Unit)?,
-        modifier: Modifier = Modifier,
-        thumbContent: (@Composable () -> Unit)? = null,
-        enabled: Boolean = true,
-        colors: SwitchColors = SwitchDefaults.colors(),
-        interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
-    ): Unit {
+    fun DarkScreen(){
+
     }
+//     Switch(
+//        checked: Boolean,
+//        onCheckedChange: ((Boolean) -> Unit)?,
+//        modifier: Modifier = Modifier,
+//        thumbContent: (@Composable () -> Unit)? = null,
+//        enabled: Boolean = true,
+//        colors: SwitchColors = SwitchDefaults.colors(),
+//        interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
+//    ): Unit {
+//
+//    }
 }
