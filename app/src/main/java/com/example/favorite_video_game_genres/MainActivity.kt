@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.google.firebase.firestore.FirebaseFirestore
+import androidx.compose.material3.CheckboxColors
 
 
 //import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
@@ -141,14 +142,14 @@ class MainActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(android.graphics.Color.parseColor("#fff68f")))
                 .verticalScroll(state)
+                .background(Color(android.graphics.Color.parseColor("#DB864E")))
         )
         {
             Text(
                 text = "Favorite Video Game Genres",
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#FF6F61")),
+                    color = Color(android.graphics.Color.parseColor("#000000")),
                     fontSize = 34.sp,
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.W900
@@ -174,7 +175,7 @@ class MainActivity : ComponentActivity() {
                     )
                     {
                         drawRect(
-                            color = Color(android.graphics.Color.parseColor("#88b04b")),
+                            color = Color(android.graphics.Color.parseColor("#DC6B2F")),
                             size = Size(
                                 (size.width - 40.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!),
                                 size.height
@@ -184,7 +185,7 @@ class MainActivity : ComponentActivity() {
                     Text(
                         text = value.first,
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#6B5B95")),
+                            color = Color(android.graphics.Color.parseColor("#000000")),
                             fontSize = 14.sp,
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold
@@ -196,8 +197,8 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(start = 130.dp, bottom = 5.dp),
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#F28C28")),
                             fontSize = 20.sp,
+                            color = Color(android.graphics.Color.parseColor("#000000")),
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.SansSerif
                         )
@@ -218,13 +219,13 @@ class MainActivity : ComponentActivity() {
                     .align(Alignment.CenterHorizontally)
                     .padding(start = 60.dp, end = 60.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(android.graphics.Color.parseColor("#8a2be2"))
+                    containerColor = Color(android.graphics.Color.parseColor("#E35205"))
                 ),
             )
             {
                 Text(
                     text = "Insert your own choices!",
-                    color = Color(android.graphics.Color.parseColor("#00ced1")),
+                    color = Color(android.graphics.Color.parseColor("#000000")),
                     fontSize = 16.sp
                 )
             }
@@ -235,7 +236,7 @@ class MainActivity : ComponentActivity() {
     fun InputScreen(navController: NavController) {
         var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12){false}) }
         Column(modifier = Modifier
-            .background(Color(android.graphics.Color.parseColor("#fff68f")))
+            .background(Color(android.graphics.Color.parseColor("#DB864E")))
             .fillMaxSize()
             )
         {
@@ -246,7 +247,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .padding(top = 25.dp, start = 20.dp, end = 20.dp),
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#0089FF")),
+                    color = Color(android.graphics.Color.parseColor("#000000")),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif
@@ -287,7 +288,7 @@ class MainActivity : ComponentActivity() {
             {
                 listHeight = (getScreenHeight * .7f)
             }
-            Log.d("TagHIHI", "$listHeight----------------${getScreenHeight}")
+            //Log.d("TagHIHI", "$listHeight----------------${getScreenHeight}")
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -301,16 +302,20 @@ class MainActivity : ComponentActivity() {
                         Checkbox(
                             checked = isChecked,
                             onCheckedChange = { isChecked = !isChecked},
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color(android.graphics.Color.parseColor("#DC6B2F")),
+                                uncheckedColor = Color(android.graphics.Color.parseColor("#DC6B2F"))
+                            )
                         )
                         Text(
                             text = options[i],
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.SansSerif,
-                                color = Color.Red
+                                color = Color(android.graphics.Color.parseColor("#000000"))
                             ),
                             modifier = Modifier
-                                .padding(top = 8.dp)
+                                .padding(top = 10.dp)
                         )
                         //checked[i] = isChecked
                     }
@@ -353,7 +358,7 @@ class MainActivity : ComponentActivity() {
                     graphData.update("Trivia", retrieveData[11])
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Green
+                    containerColor = Color(android.graphics.Color.parseColor("#E35205"))
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -365,7 +370,7 @@ class MainActivity : ComponentActivity() {
                     text = "Submit",
                     textAlign = TextAlign.Center,
                     style = TextStyle(
-                        color = Color.Red,
+                        color = Color(android.graphics.Color.parseColor("#000000")),
                         fontSize = 18.sp,
                         fontFamily = FontFamily.SansSerif
                     )
