@@ -37,6 +37,10 @@ private val LightColorScheme = lightColorScheme(
     */
 )
 
+/*Code below is saying if the device being used is already in darkMode then it will apply those changes
+until the user changes it themselves on their device
+ */
+
 @Composable
 fun Favorite_video_game_genresTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -67,4 +71,12 @@ fun Favorite_video_game_genresTheme(
         typography = Typography,
         content = content
     )
+}
+
+@Composable
+fun DarkTheme(
+    darkTheme: Boolean = true,
+
+) {
+
 }
