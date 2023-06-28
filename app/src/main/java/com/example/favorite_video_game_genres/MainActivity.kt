@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class MainActivity : ComponentActivity() {
 
-    private var retrieveData by mutableStateOf(Array<Float>(12){10f})
+    private var retrieveData by mutableStateOf(Array<Float>(12) { 10f })
 
     //Function runs first for retriving the data from firestore
     private fun fetchFromFireBase(callback: () -> Unit) {
@@ -62,40 +63,16 @@ class MainActivity : ComponentActivity() {
                 retrieveData[11] = (data!!["Trivia"]).toString().toFloat()
                 callback()
             }
-            .addOnFailureListener {exception ->
+            .addOnFailureListener { exception ->
                 Log.d("errorTag", "Pulling data failed : ", exception)
             }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Access a Cloud Firestore instance from your Activity
-//            val db = FirebaseFirestore.getInstance()
-//
-//            val test = db.collection("users")
-        // Create a new user with a first, middle, and last name
-//            val user = hashMapOf(
-//                "first" to "Alan",
-//                "middle" to "Mathison",
-//                "last" to "Turing",
-//                "born" to 1912,
-//            )
-//           test.document("first").set(user)
-
-//            db.collection("users")
-//                .add(user)
-//                .addOnSuccessListener { documentReference ->
-//                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-//                }
-//                .addOnFailureListener { e ->
-//                    Log.w(TAG, "Error adding document", e)
-//                }
-
-
         fetchFromFireBase {
             setContent {
-
+//                val darkUI()
                 val navController = rememberNavController()
 
                 NavHost(
@@ -232,7 +209,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun InputScreen(navController: NavController) {
-        var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12){false}) }
+        var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12) { false }) }
         Box(modifier = Modifier.background(Color(android.graphics.Color.parseColor("#fff68f"))))
         {
             Text(
@@ -248,7 +225,7 @@ class MainActivity : ComponentActivity() {
                     fontFamily = FontFamily.SansSerif
                 )
             )
-            val options :Array<String> = arrayOf(
+            val options: Array<String> = arrayOf(
                 "Action Games",
                 "Adventure Games",
                 "Board Games",
@@ -273,7 +250,7 @@ class MainActivity : ComponentActivity() {
                     Row() {
                         Checkbox(
                             checked = isChecked,
-                            onCheckedChange = { isChecked = !isChecked},
+                            onCheckedChange = { isChecked = !isChecked },
                         )
                         Text(
                             text = options[i],
@@ -303,10 +280,8 @@ class MainActivity : ComponentActivity() {
 
                     val db = FirebaseFirestore.getInstance()
 
-                    for((i, value) in checked.value.withIndex())
-                    {
-                        if(value)
-                        {
+                    for ((i, value) in checked.value.withIndex()) {
+                        if (value) {
                             retrieveData[i]++;
                         }
                     }
@@ -345,10 +320,26 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-    @Composable
-    fun DarkScreen(){
 
-    }
+    @Composable
+    fun Favorite_video_game_genresTheme(
+        darkTheme: Boolean = isSystemInDarkTheme(),
+        // Dynamic color is available on Android 12+
+        dynamicColor: Boolean = true,
+        content: @Composable (MainActivity) -> Unit
+    ) {
+        val colorScheme =
+            remember { mutableStateOf(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) }
+        Row {
+            Switch(
+                checked = colorScheme.value,
+                onCheckedChange = { isChecked ->
+                    colorScheme.value = isChecked
+                    val mode =
+                        if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+                    AppCompatDelegate.setDefaultNightMode(mode)
+                }
+            )
 //     Switch(
 //        checked: Boolean,
 //        onCheckedChange: ((Boolean) -> Unit)?,
@@ -360,4 +351,6 @@ class MainActivity : ComponentActivity() {
 //    ): Unit {
 //
 //    }
+        }
+    }
 }
