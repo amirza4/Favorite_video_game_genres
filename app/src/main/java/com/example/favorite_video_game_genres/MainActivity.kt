@@ -121,7 +121,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun DisplayScreen(navController: NavController) {
 
-        val barGraphData: Array<Pair<String, Float>> = arrayOf(
+        var barGraphData: Array<Pair<String, Float>> = arrayOf(
             Pair("Action Games", retrieveData[0]),
             Pair("Adventure Games", retrieveData[1]),
             Pair("Board Games", retrieveData[2]),
@@ -141,14 +141,14 @@ class MainActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(android.graphics.Color.parseColor("#fff68f")))
                 .verticalScroll(state)
+                .background(Color(android.graphics.Color.parseColor("#DB864E")))
         )
         {
             Text(
                 text = "Favorite Video Game Genres",
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#FF6F61")),
+                    color = Color(android.graphics.Color.parseColor("#000000")),
                     fontSize = 34.sp,
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.W900
@@ -174,9 +174,9 @@ class MainActivity : ComponentActivity() {
                     )
                     {
                         drawRect(
-                            color = Color(android.graphics.Color.parseColor("#88b04b")),
+                            color = Color(android.graphics.Color.parseColor("#DC6B2F")),
                             size = Size(
-                                (size.width - 40.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!),
+                                (size.width - 15.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!),
                                 size.height
                             ),
                         )
@@ -184,19 +184,19 @@ class MainActivity : ComponentActivity() {
                     Text(
                         text = value.first,
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#6B5B95")),
+                            color = Color(android.graphics.Color.parseColor("#000000")),
                             fontSize = 14.sp,
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold
                         ),
-                        modifier = Modifier.padding(top = 3.dp, start = 5.dp)
+                        modifier = Modifier.padding(top = 5.dp, start = 5.dp)
                     )
                     Text(
                         text = value.second.toInt().toString(),
                         modifier = Modifier
                             .padding(start = 130.dp, bottom = 5.dp),
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#F28C28")),
+                            color = Color(android.graphics.Color.parseColor("#000000")),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.SansSerif
@@ -216,15 +216,15 @@ class MainActivity : ComponentActivity() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally)
-                    .padding(start = 60.dp, end = 60.dp),
+                    .padding(start = 60.dp, end = 60.dp, bottom = 10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(android.graphics.Color.parseColor("#8a2be2"))
+                    containerColor = Color(android.graphics.Color.parseColor("#E35205"))
                 ),
             )
             {
                 Text(
                     text = "Insert your own choices!",
-                    color = Color(android.graphics.Color.parseColor("#00ced1")),
+                    color = Color(android.graphics.Color.parseColor("#000000")),
                     fontSize = 16.sp
                 )
             }
@@ -234,9 +234,11 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun InputScreen(navController: NavController) {
         var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12){false}) }
+        val state = rememberScrollState()
         Column(modifier = Modifier
-            .background(Color(android.graphics.Color.parseColor("#fff68f")))
+            .background(Color(android.graphics.Color.parseColor("#DB864E")))
             .fillMaxSize()
+            .verticalScroll(state)
             )
         {
             Text(
@@ -244,9 +246,9 @@ class MainActivity : ComponentActivity() {
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 25.dp, start = 20.dp, end = 20.dp),
+                    .padding(top = 35.dp, start = 20.dp, end = 20.dp),
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#0089FF")),
+                    color = Color(android.graphics.Color.parseColor("#000000")),
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif
@@ -301,16 +303,20 @@ class MainActivity : ComponentActivity() {
                         Checkbox(
                             checked = isChecked,
                             onCheckedChange = { isChecked = !isChecked},
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color(android.graphics.Color.parseColor("#DC6B2F")),
+                                uncheckedColor = Color(android.graphics.Color.parseColor("#DC6B2F"))
+                            )
                         )
                         Text(
                             text = options[i],
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.SansSerif,
-                                color = Color.Red
+                                color = Color(android.graphics.Color.parseColor("#000000"))
                             ),
                             modifier = Modifier
-                                .padding(top = 8.dp)
+                                .padding(top = 10.dp)
                         )
                         //checked[i] = isChecked
                     }
@@ -353,7 +359,7 @@ class MainActivity : ComponentActivity() {
                     graphData.update("Trivia", retrieveData[11])
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Green
+                    containerColor = Color(android.graphics.Color.parseColor("#E35205"))
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -365,7 +371,7 @@ class MainActivity : ComponentActivity() {
                     text = "Submit",
                     textAlign = TextAlign.Center,
                     style = TextStyle(
-                        color = Color.Red,
+                        color = Color(android.graphics.Color.parseColor("#000000")),
                         fontSize = 18.sp,
                         fontFamily = FontFamily.SansSerif
                     )
