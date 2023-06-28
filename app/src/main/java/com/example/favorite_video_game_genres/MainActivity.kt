@@ -1,6 +1,7 @@
 package com.example.favorite_video_game_genres
 
 import android.annotation.SuppressLint
+import android.hardware.lights.Light
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -14,7 +15,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -24,6 +27,7 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -33,6 +37,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.favorite_video_game_genres.ui.theme.*
 
 
 //import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
@@ -40,8 +45,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 class MainActivity : ComponentActivity() {
 
     private var retrieveData by mutableStateOf(Array<Float>(12) { 10f })
+    private var LDmode by mutableStateOf("Light")
+    private var primaryColor by mutableStateOf(LightColorScheme.primary)
+    private var secondaryColor by mutableStateOf(LightColorScheme.secondary)
+    private var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
+    private var buttonLDModeColor by mutableStateOf(Color.White)
+    private var textLDModeColor by mutableStateOf(Color.Black)
 
-    //Function runs first for retriving the data from firestore
+    //Function runs first for retrieving the data from firestore
     private fun fetchFromFireBase(callback: () -> Unit) {
         val db = FirebaseFirestore.getInstance()
 
@@ -88,7 +99,55 @@ class MainActivity : ComponentActivity() {
                         InputScreen(navController = navController)
                     }
                 }
+                Overlay()
             }
+        }
+    }
+
+    @Composable
+    fun Overlay() {
+        val buttonPosY = LocalConfiguration.current.screenHeightDp.dp * .745f
+        val buttonPosX = LocalConfiguration.current.screenWidthDp.dp * .787f
+        val buttonSizeY = LocalConfiguration.current.screenHeightDp.dp * .04f
+        val buttonSizeX = LocalConfiguration.current.screenWidthDp.dp * .195f
+        Button(
+            modifier = Modifier.offset(x = buttonPosX, y = buttonPosY)
+                .size(buttonSizeX, buttonSizeY),
+            onClick =
+            {
+                if(primaryColor == LightColorScheme.primary)
+                {
+                    LDmode = "Dark"
+                    buttonLDModeColor = Color.Black
+                    textLDModeColor = Color.White
+                    primaryColor = DarkColorScheme.primary
+                    secondaryColor = DarkColorScheme.secondary
+                    tertiaryColor = DarkColorScheme.tertiary
+                   //Log.d("DarkMode", "swapped to Dark")
+                }
+                else
+                {
+                    LDmode = "Light"
+                    buttonLDModeColor = Color.White
+                    textLDModeColor = Color.Black
+                    primaryColor = LightColorScheme.primary
+                    secondaryColor = LightColorScheme.secondary
+                    tertiaryColor = LightColorScheme.tertiary
+                    //Log.d("LightMode", "swapped to Light")
+                }
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = buttonLDModeColor
+            )
+        )
+        {
+            Text(
+                text = LDmode,
+                style = TextStyle(
+                    color = textLDModeColor,
+                    fontWeight = FontWeight.Bold
+                )
+            )
         }
     }
 
@@ -110,11 +169,11 @@ class MainActivity : ComponentActivity() {
             Pair("Sport Games", retrieveData[10]),
             Pair("Trivia Games", retrieveData[11])
         )
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
-//                .background(Color(android.graphics.Color.parseColor("#fff68f")))
+                .background(primaryColor)
+                .verticalScroll(rememberScrollState())
         )
         {
             Text(
@@ -281,7 +340,7 @@ class MainActivity : ComponentActivity() {
 
                     for ((i, value) in checked.value.withIndex()) {
                         if (value) {
-                            retrieveData[i]++;
+                            retrieveData[i]++
                         }
                     }
 
