@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -115,7 +114,7 @@ class MainActivity : ComponentActivity() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(android.graphics.Color.parseColor("#fff68f")))
+//                .background(Color(android.graphics.Color.parseColor("#fff68f")))
         )
         {
             Text(
@@ -320,37 +319,42 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    @Composable
-    fun Favorite_video_game_genresTheme(
-        darkTheme: Boolean = isSystemInDarkTheme(),
-        // Dynamic color is available on Android 12+
-        dynamicColor: Boolean = true,
-        content: @Composable (MainActivity) -> Unit
-    ) {
-        val colorScheme =
-            remember { mutableStateOf(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) }
-        Row {
-            Switch(
-                checked = colorScheme.value,
-                onCheckedChange = { isChecked ->
-                    colorScheme.value = isChecked
-                    val mode =
-                        if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-                    AppCompatDelegate.setDefaultNightMode(mode)
-                }
-            )
-//     Switch(
-//        checked: Boolean,
-//        onCheckedChange: ((Boolean) -> Unit)?,
-//        modifier: Modifier = Modifier,
-//        thumbContent: (@Composable () -> Unit)? = null,
-//        enabled: Boolean = true,
-//        colors: SwitchColors = SwitchDefaults.colors(),
-//        interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
-//    ): Unit {
+//@Composable
+//fun ThemeSwitch(){
+//    var isDarkTheme by remember{ mutableStateOf(false)}
 //
+//    Column(modifier = Modifier.padding(16.dp)) {
+//        Switch(
+//            checked = isDarkTheme,
+//            onCheckedChange = { isDarkTheme = it }
+//        )
+//        MaterialTheme(
+//            if (darkTheme) DarkColorScheme else LightColorScheme,
+//            content = content
+//        )
 //    }
-        }
-    }
+//}
+//    @Composable
+//    fun Favorite_video_game_genresTheme(
+//        darkTheme: Boolean = isSystemInDarkTheme(),
+//        // Dynamic color is available on Android 12+
+//        dynamicColor: Boolean = true,
+//        content: @Composable (MainActivity) -> Unit
+//    ) {
+//        val colorScheme =
+//            remember { mutableStateOf(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) }
+//        Column(
+//            modifier = Modifier.padding(16.dp)
+//        ) {
+//            Switch(
+//                checked = colorScheme.value,
+//                onCheckedChange = { isChecked ->
+//                    colorScheme.value = isChecked
+//                    val mode =
+//                        if (isChecked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
+//                    AppCompatDelegate.setDefaultNightMode(mode)
+//                }
+//            )
+//        }
+//    }
 }

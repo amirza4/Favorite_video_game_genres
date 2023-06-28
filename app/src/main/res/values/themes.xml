@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     //The apps default theme if no other theme is applied
-    <style name="Theme.Favorite_video_game_genres" parent="android:Theme.Material.Light.NoActionBar" />
-
-    //This style is used for the Dark and light mode for switching
-    <style name="Theme.Dark_Mode" parent="Theme.AppCompat.DayNight"/>
+    <style name="Theme.Favorite_video_game_genres" parent="android:Theme.Material.Light.DarkActionBar" />
 </resources>
