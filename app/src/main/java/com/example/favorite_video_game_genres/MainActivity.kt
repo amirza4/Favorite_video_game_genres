@@ -82,7 +82,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fetchFromFireBase {
             setContent {
-//                val darkUI()
                 val navController = rememberNavController()
 
                 NavHost(
@@ -110,46 +109,46 @@ class MainActivity : ComponentActivity() {
         val buttonPosX = LocalConfiguration.current.screenWidthDp.dp * .787f
         val buttonSizeY = LocalConfiguration.current.screenHeightDp.dp * .04f
         val buttonSizeX = LocalConfiguration.current.screenWidthDp.dp * .195f
-        Button(
-            modifier = Modifier.offset(x = buttonPosX, y = buttonPosY)
-                .size(buttonSizeX, buttonSizeY),
-            onClick =
-            {
-                if(primaryColor == LightColorScheme.primary)
-                {
+
+        var isDarkMode by remember { mutableStateOf(false) }
+
+        Switch(
+            checked = isDarkMode,
+            onCheckedChange = { checked ->
+                isDarkMode = checked
+                if (checked) {
                     LDmode = "Dark"
                     buttonLDModeColor = Color.Black
                     textLDModeColor = Color.White
                     primaryColor = DarkColorScheme.primary
                     secondaryColor = DarkColorScheme.secondary
                     tertiaryColor = DarkColorScheme.tertiary
-                   //Log.d("DarkMode", "swapped to Dark")
-                }
-                else
-                {
+                    // Log.d("DarkMode", "swapped to Dark")
+                } else {
                     LDmode = "Light"
                     buttonLDModeColor = Color.White
                     textLDModeColor = Color.Black
                     primaryColor = LightColorScheme.primary
                     secondaryColor = LightColorScheme.secondary
                     tertiaryColor = LightColorScheme.tertiary
-                    //Log.d("LightMode", "swapped to Light")
+                    // Log.d("LightMode", "swapped to Light")
                 }
             },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = buttonLDModeColor
+            modifier = Modifier.offset(x = buttonPosX, y = buttonPosY)
+                .size(buttonSizeX, buttonSizeY),
+            colors = SwitchDefaults.colors(
             )
         )
-        {
-            Text(
-                text = LDmode,
-                style = TextStyle(
-                    color = textLDModeColor,
-                    fontWeight = FontWeight.Bold
-                )
+
+        Text(
+            text = LDmode,
+            style = TextStyle(
+                color = textLDModeColor,
+                fontWeight = FontWeight.Bold
             )
-        }
+        )
     }
+
 
     @SuppressLint("SuspiciousIndentation")
     @Composable
