@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,9 +37,6 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.google.firebase.firestore.FirebaseFirestore
-
-
-//import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
 
 class MainActivity : ComponentActivity() {
 
@@ -68,51 +68,37 @@ class MainActivity : ComponentActivity() {
             }
     }
 
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Access a Cloud Firestore instance from your Activity
-//            val db = FirebaseFirestore.getInstance()
-//
-//            val test = db.collection("users")
-        // Create a new user with a first, middle, and last name
-//            val user = hashMapOf(
-//                "first" to "Alan",
-//                "middle" to "Mathison",
-//                "last" to "Turing",
-//                "born" to 1912,
-//            )
-//           test.document("first").set(user)
-
-//            db.collection("users")
-//                .add(user)
-//                .addOnSuccessListener { documentReference ->
-//                    Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-//                }
-//                .addOnFailureListener { e ->
-//                    Log.w(TAG, "Error adding document", e)
-//                }
-
-
         fetchFromFireBase {
             setContent {
 
                 val navController = rememberNavController()
-
-                NavHost(
-                    navController = navController,
-                    startDestination = "DisplayScreen"
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            modifier = Modifier.height(50.dp), // Height of AppBar
+                            title = {
+                                Text("Favorite Video Game Genre", style = MaterialTheme.typography.headlineSmall)  // Change Text style for the title
+                            },
+                            navigationIcon = {
+                                if(navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                                    }
+                                }
+                            }
+                        )
+                    },
+                    content = {
+                        NavHost(navController, startDestination = "DisplayScreen") {
+                            composable("DisplayScreen") { DisplayScreen(navController) }
+                            composable("InputScreen") { InputScreen(navController) }
+                        }
+                    }
                 )
-                {
-                    composable("DisplayScreen")
-                    {
-                        DisplayScreen(navController = navController)
-                    }
-                    composable("InputScreen")
-                    {
-                        InputScreen(navController = navController)
-                    }
-                }
             }
         }
     }
@@ -145,20 +131,20 @@ class MainActivity : ComponentActivity() {
                 .background(Color(android.graphics.Color.parseColor("#DB864E")))
         )
         {
-            Text(
-                text = "Favorite Video Game Genres",
-                style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#000000")),
-                    fontSize = 34.sp,
-                    fontFamily = FontFamily.Cursive,
-                    fontWeight = FontWeight.W900
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 20.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
+//            Text(
+//                text = "Favorite Video Game Genres",
+//                style = TextStyle(
+//                    color = Color(android.graphics.Color.parseColor("#000000")),
+//                    fontSize = 34.sp,
+//                    fontFamily = FontFamily.Cursive,
+//                    fontWeight = FontWeight.W900
+//                ),
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .padding(top = 20.dp, bottom = 20.dp)
+//                    .align(Alignment.CenterHorizontally)
+//            )
             barGraphData.forEach { value ->
                 Box(
                     modifier = Modifier
