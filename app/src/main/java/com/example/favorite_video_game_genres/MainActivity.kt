@@ -1,7 +1,6 @@
 package com.example.favorite_video_game_genres
 
 import android.annotation.SuppressLint
-import android.hardware.lights.Light
 import android.os.Bundle
 import android.util.Log
 import android.widget.*
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -50,7 +50,6 @@ class MainActivity : ComponentActivity() {
     private var primaryColor by mutableStateOf(LightColorScheme.primary)
     private var secondaryColor by mutableStateOf(LightColorScheme.secondary)
     private var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
-    private var switchLDModeColor by mutableStateOf(Color.White)
     private var textLDModeColor by mutableStateOf(Color.Black)
 
     //Function runs first for retrieving the data from firestore
@@ -106,69 +105,141 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Overlay() {
-        val posY = LocalConfiguration.current.screenHeightDp.dp * .745f
-        val posX = LocalConfiguration.current.screenWidthDp.dp * .787f
-        val sizeY = LocalConfiguration.current.screenHeightDp.dp * .04f
-        val sizeX = LocalConfiguration.current.screenWidthDp.dp * .195f
+        var switchPosY: Dp = 0.dp
+        var switchPosX: Dp = 0.dp
+        var scaleOverlay = 1f
+        var textPosY: Dp = 0.dp
+        var textPosX: Dp = 0.dp
+        var sunPosY: Dp = 0.dp
+        var sunPosX: Dp = 0.dp
+        var sunSizeY: Dp = 0.dp
+        var sunSizeX: Dp = 0.dp
+        var moonPosY: Dp = 0.dp
+        var moonPosX: Dp = 0.dp
+        var moonSizeY: Dp = 0.dp
+        var moonSizeX: Dp = 0.dp
+
+        /* Phone height sizes
+            3.3 WQVGA - 533.0.dp
+            Nexus 5 - 616.0.dp
+            Pixel 3 - 737.0.dp
+            Pixel 6 - 829.0.dp
+            8 Foldout - 945.0.dp
+            */
+        if(LocalConfiguration.current.screenHeightDp.dp < 650.dp)
+        {
+            switchPosY = LocalConfiguration.current.screenHeightDp.dp * .05f
+            switchPosX = LocalConfiguration.current.screenWidthDp.dp * -.01f
+            textPosY = LocalConfiguration.current.screenHeightDp.dp * -.025f
+            textPosX = LocalConfiguration.current.screenWidthDp.dp * -.05f
+            sunPosY = LocalConfiguration.current.screenHeightDp.dp * .025f
+            sunPosX = LocalConfiguration.current.screenWidthDp.dp * .035f
+            sunSizeY = LocalConfiguration.current.screenHeightDp.dp * .04f
+            sunSizeX = LocalConfiguration.current.screenWidthDp.dp * .195f
+            moonPosY = LocalConfiguration.current.screenHeightDp.dp * .0235f
+            moonPosX = LocalConfiguration.current.screenWidthDp.dp * -.032f
+            moonSizeY = LocalConfiguration.current.screenHeightDp.dp * .035f
+            moonSizeX = LocalConfiguration.current.screenWidthDp.dp * .19f
+        }
+        else if(LocalConfiguration.current.screenHeightDp.dp >= 650.0.dp && LocalConfiguration.current.screenHeightDp.dp < 840.0.dp)
+        {
+            scaleOverlay = 1.25f
+            switchPosY = LocalConfiguration.current.screenHeightDp.dp * -.08f
+            switchPosX = LocalConfiguration.current.screenWidthDp.dp * -.13f
+            textPosY = LocalConfiguration.current.screenHeightDp.dp * -.133f
+            textPosX = LocalConfiguration.current.screenWidthDp.dp * -.157f
+            sunPosY = LocalConfiguration.current.screenHeightDp.dp * -.0939f
+            sunPosX = LocalConfiguration.current.screenWidthDp.dp * -.0752f
+            sunSizeY = LocalConfiguration.current.screenHeightDp.dp * .033f
+            sunSizeX = LocalConfiguration.current.screenWidthDp.dp * .185f
+            moonPosY = LocalConfiguration.current.screenHeightDp.dp * -.098f
+            moonPosX = LocalConfiguration.current.screenWidthDp.dp * -.16f
+            moonSizeY = LocalConfiguration.current.screenHeightDp.dp * .024f
+            moonSizeX = LocalConfiguration.current.screenWidthDp.dp * .13f
+        }
+        else if(LocalConfiguration.current.screenHeightDp.dp >= 840.dp)
+        {
+            scaleOverlay = 1.5f
+            switchPosY = LocalConfiguration.current.screenHeightDp.dp * -.15f
+            switchPosX = LocalConfiguration.current.screenWidthDp.dp * -.2f
+            textPosY = LocalConfiguration.current.screenHeightDp.dp * -.19f
+            textPosX = LocalConfiguration.current.screenWidthDp.dp * -.215f
+            sunPosY = LocalConfiguration.current.screenHeightDp.dp * -.162f
+            sunPosX = LocalConfiguration.current.screenWidthDp.dp * -.138f
+            sunSizeY = LocalConfiguration.current.screenHeightDp.dp * .027f
+            sunSizeX = LocalConfiguration.current.screenWidthDp.dp * .16f
+            moonPosY = LocalConfiguration.current.screenHeightDp.dp * -.165f
+            moonPosX = LocalConfiguration.current.screenWidthDp.dp * -.191f
+            moonSizeY = LocalConfiguration.current.screenHeightDp.dp * .02f
+            moonSizeX = LocalConfiguration.current.screenWidthDp.dp * .11f
+        }
 
         var isDarkMode by remember { mutableStateOf(false) }
 
-        Switch(
-            checked = isDarkMode,
-            onCheckedChange = { checked ->
-                isDarkMode = checked
-                if (checked) {
-                    LDmode = "Dark"
-                    switchLDModeColor = Color.Black
-                    textLDModeColor = Color.White
-                    primaryColor = DarkColorScheme.primary
-                    secondaryColor = DarkColorScheme.secondary
-                    tertiaryColor = DarkColorScheme.tertiary
-                    // Log.d("DarkMode", "swapped to Dark")
-                } else {
-                    LDmode = "Light"
-                    switchLDModeColor = Color.White
-                    textLDModeColor = Color.Black
-                    primaryColor = LightColorScheme.primary
-                    secondaryColor = LightColorScheme.secondary
-                    tertiaryColor = LightColorScheme.tertiary
-                    // Log.d("LightMode", "swapped to Light")
-                }
-            },
-            modifier = Modifier
-                .offset(x = posX, y = posY)
-                .size(sizeX, sizeY),
-            colors = SwitchDefaults.colors(
-                checkedBorderColor = Color.Black,
-                checkedThumbColor = switchLDModeColor,
-                checkedTrackColor = Color.White
-            )
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .absoluteOffset((0).dp, (-100).dp)
+                .scale(scaleOverlay),
+            contentAlignment = Alignment.BottomEnd
         )
-        Text(
-            text = LDmode,
-            style = TextStyle(
-                color = textLDModeColor,
-                fontWeight = FontWeight.Bold
-            ),
-            modifier = Modifier.offset(x = posX + 20.dp, y = posY - 20.dp)
-        )
-        if(LDmode == "Dark")
         {
-            Image(
-                painter = painterResource(id = R.drawable.moon1),
-                contentDescription = null,
-                modifier = Modifier.offset(x = posX, y = posY + 5.dp)
-                    .size(sizeX.div(1.5f), sizeY.div(1.5f))
+            Switch(
+                checked = isDarkMode,
+                onCheckedChange = { checked ->
+                    isDarkMode = checked
+                    if (checked) {
+                        LDmode = "Dark"
+                        textLDModeColor = Color.White
+                        primaryColor = DarkColorScheme.primary
+                        secondaryColor = DarkColorScheme.secondary
+                        tertiaryColor = DarkColorScheme.tertiary
+                        // Log.d("DarkMode", "swapped to Dark")
+                    } else {
+                        LDmode = "Light"
+                        textLDModeColor = Color.Black
+                        primaryColor = LightColorScheme.primary
+                        secondaryColor = LightColorScheme.secondary
+                        tertiaryColor = LightColorScheme.tertiary
+                        // Log.d("LightMode", "swapped to Light")
+                    }
+                },
+                modifier = Modifier
+                    .offset(switchPosX, switchPosY),
+                colors = SwitchDefaults.colors(
+                    checkedBorderColor = Color.White,
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = Color.Black,
+                    uncheckedBorderColor = Color.Black,
+                    uncheckedThumbColor = Color.Black,
+                    uncheckedTrackColor = Color.White
+                )
             )
-        }
-        else
-        {
-            Image(
-                painter = painterResource(id = R.drawable.sun1),
-                contentDescription = null,
-                modifier = Modifier.offset(x = posX + 22.dp, y = posY + 5.dp)
-                    .size(sizeX.div(1.5f), sizeY.div(1.5f))
+            Text(
+                text = LDmode,
+                style = TextStyle(
+                    color = textLDModeColor,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier.offset(textPosX, textPosY)
             )
+            if(isDarkMode)
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.moon1),
+                    contentDescription = null,
+                    modifier = Modifier.offset(moonPosX, moonPosY)
+                        .size(moonSizeX, moonSizeY)
+                )
+            }
+            else
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.sun1),
+                    contentDescription = null,
+                    modifier = Modifier.offset(sunPosX, sunPosY)
+                        .size(sunSizeX, sunSizeY)
+                )
+            }
         }
     }
 
