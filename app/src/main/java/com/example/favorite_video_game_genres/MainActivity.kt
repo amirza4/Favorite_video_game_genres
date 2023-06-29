@@ -28,6 +28,7 @@ import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -49,7 +50,7 @@ class MainActivity : ComponentActivity() {
     private var primaryColor by mutableStateOf(LightColorScheme.primary)
     private var secondaryColor by mutableStateOf(LightColorScheme.secondary)
     private var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
-    private var buttonLDModeColor by mutableStateOf(Color.White)
+    private var switchLDModeColor by mutableStateOf(Color.White)
     private var textLDModeColor by mutableStateOf(Color.Black)
 
     //Function runs first for retrieving the data from firestore
@@ -105,10 +106,10 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun Overlay() {
-        val buttonPosY = LocalConfiguration.current.screenHeightDp.dp * .745f
-        val buttonPosX = LocalConfiguration.current.screenWidthDp.dp * .787f
-        val buttonSizeY = LocalConfiguration.current.screenHeightDp.dp * .04f
-        val buttonSizeX = LocalConfiguration.current.screenWidthDp.dp * .195f
+        val posY = LocalConfiguration.current.screenHeightDp.dp * .745f
+        val posX = LocalConfiguration.current.screenWidthDp.dp * .787f
+        val sizeY = LocalConfiguration.current.screenHeightDp.dp * .04f
+        val sizeX = LocalConfiguration.current.screenWidthDp.dp * .195f
 
         var isDarkMode by remember { mutableStateOf(false) }
 
@@ -118,7 +119,7 @@ class MainActivity : ComponentActivity() {
                 isDarkMode = checked
                 if (checked) {
                     LDmode = "Dark"
-                    buttonLDModeColor = Color.Black
+                    switchLDModeColor = Color.Black
                     textLDModeColor = Color.White
                     primaryColor = DarkColorScheme.primary
                     secondaryColor = DarkColorScheme.secondary
@@ -126,7 +127,7 @@ class MainActivity : ComponentActivity() {
                     // Log.d("DarkMode", "swapped to Dark")
                 } else {
                     LDmode = "Light"
-                    buttonLDModeColor = Color.White
+                    switchLDModeColor = Color.White
                     textLDModeColor = Color.Black
                     primaryColor = LightColorScheme.primary
                     secondaryColor = LightColorScheme.secondary
@@ -134,19 +135,41 @@ class MainActivity : ComponentActivity() {
                     // Log.d("LightMode", "swapped to Light")
                 }
             },
-            modifier = Modifier.offset(x = buttonPosX, y = buttonPosY)
-                .size(buttonSizeX, buttonSizeY),
+            modifier = Modifier
+                .offset(x = posX, y = posY)
+                .size(sizeX, sizeY),
             colors = SwitchDefaults.colors(
+                checkedBorderColor = Color.Black,
+                checkedThumbColor = switchLDModeColor,
+                checkedTrackColor = Color.White
             )
         )
-
         Text(
             text = LDmode,
             style = TextStyle(
                 color = textLDModeColor,
                 fontWeight = FontWeight.Bold
-            )
+            ),
+            modifier = Modifier.offset(x = posX + 20.dp, y = posY - 20.dp)
         )
+        if(LDmode == "Dark")
+        {
+            Image(
+                painter = painterResource(id = R.drawable.moon1),
+                contentDescription = null,
+                modifier = Modifier.offset(x = posX, y = posY + 5.dp)
+                    .size(sizeX.div(1.5f), sizeY.div(1.5f))
+            )
+        }
+        else
+        {
+            Image(
+                painter = painterResource(id = R.drawable.sun1),
+                contentDescription = null,
+                modifier = Modifier.offset(x = posX + 22.dp, y = posY + 5.dp)
+                    .size(sizeX.div(1.5f), sizeY.div(1.5f))
+            )
+        }
     }
 
 
@@ -178,7 +201,7 @@ class MainActivity : ComponentActivity() {
             Text(
                 text = "Favorite Video Game Genres",
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#FF6F61")),
+                    color = textLDModeColor,
                     fontSize = 34.sp,
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.W900
@@ -207,7 +230,7 @@ class MainActivity : ComponentActivity() {
                         width =
                             (size.width - 216.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!)
                         drawRect(
-                            color = Color(android.graphics.Color.parseColor("#88b04b")),
+                            color = secondaryColor,
                             size = Size(
                                 (size.width - 40.dp.toPx()) * (value.second / barGraphData.maxOfOrNull { it.second }!!),
                                 size.height
@@ -217,7 +240,7 @@ class MainActivity : ComponentActivity() {
                     Text(
                         text = value.first,
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#6B5B95")),
+                            color = textLDModeColor,
                             fontSize = 14.sp,
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold
@@ -229,7 +252,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(start = width.dp + 130.dp, top = 5.dp),
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#F28C28")),
+                            color = textLDModeColor,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.SansSerif
@@ -251,13 +274,13 @@ class MainActivity : ComponentActivity() {
                     .align(Alignment.CenterHorizontally)
                     .padding(start = 60.dp, end = 60.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(android.graphics.Color.parseColor("#8a2be2"))
+                    containerColor = tertiaryColor
                 ),
             )
             {
                 Text(
                     text = "Insert your own choices!",
-                    color = Color(android.graphics.Color.parseColor("#00ced1")),
+                    color = textLDModeColor,
                     fontSize = 16.sp
                 )
             }
@@ -267,7 +290,7 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun InputScreen(navController: NavController) {
         var checked = remember { mutableStateOf<Array<Boolean>>(Array<Boolean>(12) { false }) }
-        Box(modifier = Modifier.background(Color(android.graphics.Color.parseColor("#fff68f"))))
+        Box(modifier = Modifier.background(primaryColor))
         {
             Text(
                 text = stringResource(R.string.labelName),
@@ -276,7 +299,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .padding(top = 35.dp, start = 20.dp, end = 20.dp),
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#0089FF")),
+                    color = textLDModeColor,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif
@@ -308,16 +331,21 @@ class MainActivity : ComponentActivity() {
                         Checkbox(
                             checked = isChecked,
                             onCheckedChange = { isChecked = !isChecked },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = secondaryColor,
+                                uncheckedColor = secondaryColor
+                            )
                         )
                         Text(
                             text = options[i],
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.SansSerif,
-                                color = Color.Red
+                                color = textLDModeColor
                             ),
                             modifier = Modifier
-                                .padding(top = 8.dp)
+                                .padding(top = 8.dp),
+                            color = textLDModeColor
                         )
                         //checked[i] = isChecked
                     }
@@ -358,7 +386,7 @@ class MainActivity : ComponentActivity() {
                     graphData.update("Trivia", retrieveData[11])
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Green
+                    containerColor = tertiaryColor
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -369,7 +397,7 @@ class MainActivity : ComponentActivity() {
                     text = "Submit",
                     textAlign = TextAlign.Center,
                     style = TextStyle(
-                        color = Color.Red,
+                        color = textLDModeColor,
                         fontSize = 18.sp,
                         fontFamily = FontFamily.SansSerif
                     )
