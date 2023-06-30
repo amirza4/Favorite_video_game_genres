@@ -79,7 +79,7 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     topBar = {
                         TopAppBar(
-                            modifier = Modifier.height(50.dp), // Height of AppBar
+                            modifier = Modifier.height(40.dp), // Height of AppBar
                             title = {
                                 Text("Favorite Video Game Genre", style = MaterialTheme.typography.headlineSmall)  // Change Text style for the title
                             },
@@ -88,9 +88,12 @@ class MainActivity : ComponentActivity() {
                                     IconButton(onClick = { navController.popBackStack() }) {
                                         Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                                     }
+                                        Color(android.graphics.Color.parseColor("#DB864E"))
                                 }
                             }
                         )
+                        //Spacer needs to be added below the TopAppBar to allow a white space sepearting the graph from the scaffold
+                            Spacer(modifier = Modifier.height(16.dp))
                     },
                     content = {
                         NavHost(navController, startDestination = "DisplayScreen") {
