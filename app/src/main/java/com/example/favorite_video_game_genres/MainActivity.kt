@@ -74,7 +74,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         fetchFromFireBase {
             setContent {
-
                 val navController = rememberNavController()
                 Scaffold(
                     topBar = {
@@ -92,7 +91,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         )
-                        //Spacer needs to be added below the TopAppBar to allow a white space sepearting the graph from the scaffold
+                        //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
                             Spacer(modifier = Modifier.height(16.dp))
                     },
                     content = {
@@ -134,20 +133,6 @@ class MainActivity : ComponentActivity() {
                 .background(Color(android.graphics.Color.parseColor("#DB864E")))
         )
         {
-//            Text(
-//                text = "Favorite Video Game Genres",
-//                style = TextStyle(
-//                    color = Color(android.graphics.Color.parseColor("#000000")),
-//                    fontSize = 34.sp,
-//                    fontFamily = FontFamily.Cursive,
-//                    fontWeight = FontWeight.W900
-//                ),
-//                textAlign = TextAlign.Center,
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//                    .padding(top = 20.dp, bottom = 20.dp)
-//                    .align(Alignment.CenterHorizontally)
-//            )
             barGraphData.forEach { value ->
                 Box(
                     modifier = Modifier
