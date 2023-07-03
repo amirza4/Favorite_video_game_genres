@@ -27,6 +27,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.focus.onFocusChanged
@@ -38,6 +45,12 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -48,6 +61,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.favorite_video_game_genres.ui.theme.*
+
 
 class MainActivity : ComponentActivity() {
 
@@ -75,28 +89,43 @@ class MainActivity : ComponentActivity() {
                 Log.d("errorTag", "Pulling data failed : ", exception)
             }
     }
+
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         fetchFromFireBase {
             setContent {
                 val navController = rememberNavController()
-
-                NavHost(
-                    navController = navController,
-                    startDestination = "DisplayScreen"
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            modifier = Modifier.height(40.dp), // Height of AppBar
+                            title = {
+                                Text("Favorite Video Game Genre", style = MaterialTheme.typography.headlineSmall)  // Change Text style for the title
+                            },
+                            navigationIcon = {
+                                if(navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                                    }
+                                        Color(android.graphics.Color.parseColor("#DB864E"))
+                                }
+                            }
+                        )
+                        //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
+                            Spacer(modifier = Modifier.height(16.dp))
+                    },
+                    content = {
+                        NavHost(navController, startDestination = "DisplayScreen") {
+                            composable("DisplayScreen") { DisplayScreen(navController) }
+                            composable("InputScreen") { InputScreen(navController) }
+                        }
+                    }
                 )
-                {
-                    composable("DisplayScreen")
-                    {
-                        DisplayScreen(navController = navController)
-                    }
-                    composable("InputScreen")
-                    {
-                        InputScreen(navController = navController)
-                    }
-                }
                 Overlay()
+                }
             }
         }
     }
@@ -359,7 +388,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .padding(top = 35.dp, start = 20.dp, end = 20.dp),
                 style = TextStyle(
-                    color = textLdModeColor,
+                    color = textLDModeColor,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif
