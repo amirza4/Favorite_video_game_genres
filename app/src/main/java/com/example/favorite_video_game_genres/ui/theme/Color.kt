@@ -11,3 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Black = Color(0xFF000080)
+
+val DarkestOrange = Color(android.graphics.Color.parseColor("#E35205"))
+val MidOrange = Color(android.graphics.Color.parseColor("#DC6B2F"))
+val LightestOrange = Color(android.graphics.Color.parseColor("#DB864E"))

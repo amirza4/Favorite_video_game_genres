@@ -17,18 +17,17 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.focus.onFocusChanged
@@ -38,8 +37,8 @@ import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -48,8 +47,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
-import com.google.firebase.firestore.FirebaseFirestore
 import com.example.favorite_video_game_genres.ui.theme.*
+import com.google.firebase.firestore.FirebaseFirestore
 
 
 class MainActivity : ComponentActivity() {
@@ -262,7 +261,7 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(state)
-                .background(Color(android.graphics.Color.parseColor("#DB864E")))
+                .background(primaryColor)
         )
         {
             Text(
@@ -294,7 +293,7 @@ class MainActivity : ComponentActivity() {
                     )
                     {
                         drawRect(
-                            color = Color(android.graphics.Color.parseColor("#DC6B2F")),
+                            color = (secondaryColor),
                             size = Size(
                                 (size.width - 15.dp.toPx()) * (value.second.toFloat() / retrieveData.maxOfOrNull { it.second }!!),
                                 size.height
@@ -338,7 +337,7 @@ class MainActivity : ComponentActivity() {
                     .align(Alignment.CenterHorizontally)
                     .padding(start = 60.dp, end = 60.dp, bottom = 10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(android.graphics.Color.parseColor("#E35205"))
+                    containerColor = (tertiaryColor)
                 ),
             )
             {
@@ -361,7 +360,7 @@ class MainActivity : ComponentActivity() {
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusController = LocalFocusManager.current
         Column(modifier = Modifier
-            .background(Color(android.graphics.Color.parseColor("#DB864E")))
+            .background(primaryColor)
             .fillMaxSize()
             .verticalScroll(state)
             .clickable {
@@ -417,8 +416,8 @@ class MainActivity : ComponentActivity() {
                             checked = check,
                             onCheckedChange = { check = !check},
                             colors = CheckboxDefaults.colors(
-                                checkedColor = Color(android.graphics.Color.parseColor("#DC6B2F")),
-                                uncheckedColor = Color(android.graphics.Color.parseColor("#DC6B2F"))
+                                checkedColor = (secondaryColor),
+                                uncheckedColor = (secondaryColor)
                             )
                         )
                         if(checked.getOrNull(i) == null)
@@ -459,8 +458,8 @@ class MainActivity : ComponentActivity() {
                                 checked = newOptionChecked,
                                 onCheckedChange = {newOptionChecked = !newOptionChecked},
                                 colors = CheckboxDefaults.colors(
-                                    checkedColor = Color(android.graphics.Color.parseColor("#DC6B2F")),
-                                    uncheckedColor = Color(android.graphics.Color.parseColor("#DC6B2F"))
+                                    checkedColor = (secondaryColor),
+                                    uncheckedColor = (secondaryColor)
                                 )
                             )
                             Text(
@@ -473,15 +472,23 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(top = 10.dp)
                                     .clickable { newOptionChecked = !newOptionChecked }
                             )
+                            val containercolor : Color
+                            if(LDmode == "Dark"){
+                                containercolor = Color.DarkGray
+                            }
+                            else
+                            {
+                                containercolor = Color.LightGray
+                            }
                             TextField(
                                 value = newOptionName,
                                 onValueChange = {newOptionName = it },
                                 colors = TextFieldDefaults.textFieldColors(
                                     focusedIndicatorColor = Color.Transparent,
                                     unfocusedIndicatorColor = Color.Transparent,
-                                    placeholderColor = Color(android.graphics.Color.parseColor("#E35205")),
-                                    cursorColor = Color(android.graphics.Color.parseColor("#DC6B2F")),
-                                    containerColor = Color.LightGray,
+                                    placeholderColor = (secondaryColor),
+                                    cursorColor = (primaryColor),
+                                    containerColor = containercolor,
                                     disabledIndicatorColor = Color.Transparent,
                                     disabledPlaceholderColor = Color.Gray
                                 ),
@@ -499,7 +506,7 @@ class MainActivity : ComponentActivity() {
                                     .offset(10.dp, 0.dp)
                                     .border(
                                         width = 5.dp,
-                                        color = Color(android.graphics.Color.parseColor("#E35205")),
+                                        color = (tertiaryColor),
                                         shape = CircleShape
                                     )
                                     .onFocusChanged
@@ -540,7 +547,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(android.graphics.Color.parseColor("#E35205"))
+                    containerColor = (tertiaryColor)
                 ),
                 modifier = Modifier
                     .fillMaxWidth()
