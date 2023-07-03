@@ -27,13 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.focus.onFocusChanged
@@ -45,12 +40,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.geometry.*
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.*
-import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -128,7 +117,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
 
     @Composable
     fun Overlay() {
@@ -280,7 +268,7 @@ class MainActivity : ComponentActivity() {
             Text(
                 text = "Favorite Video Game Genres",
                 style = TextStyle(
-                    color = textLdModeColor,
+                    color = textLDModeColor,
                     fontSize = 34.sp,
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.W900
@@ -455,7 +443,7 @@ class MainActivity : ComponentActivity() {
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.SansSerif,
-                                color = textLdModeColor
+                                color = textLDModeColor
                             ),
                             modifier = Modifier
                                 .padding(top = 10.dp)
@@ -480,7 +468,7 @@ class MainActivity : ComponentActivity() {
                                 style = TextStyle(
                                     fontSize = 20.sp,
                                     fontFamily = FontFamily.SansSerif,
-                                    color = textLdModeColor
+                                    color = textLDModeColor
                                 ),
                                 modifier = Modifier.padding(top = 10.dp)
                                     .clickable { newOptionChecked = !newOptionChecked }
@@ -500,7 +488,7 @@ class MainActivity : ComponentActivity() {
                                 textStyle = TextStyle(
                                     fontSize = 14.sp,
                                     fontFamily = FontFamily.SansSerif,
-                                    color = textLdModeColor,
+                                    color = textLDModeColor,
                                 ),
                                 placeholder = { Text(text = "Enter your option here", style = TextStyle(fontSize = 14.sp)) },
                                 shape = CircleShape,
@@ -564,7 +552,7 @@ class MainActivity : ComponentActivity() {
                     text = "Submit",
                     textAlign = TextAlign.Center,
                     style = TextStyle(
-                        color = textLdModeColor,
+                        color = textLDModeColor,
                         fontSize = 18.sp,
                         fontFamily = FontFamily.SansSerif
                     )
