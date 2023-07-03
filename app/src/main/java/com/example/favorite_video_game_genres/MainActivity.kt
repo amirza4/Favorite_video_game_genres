@@ -27,9 +27,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.focus.onFocusChanged
@@ -40,13 +37,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.draw.*
-import androidx.compose.ui.geometry.*
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.graphics.drawscope.*
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -58,12 +49,10 @@ import androidx.navigation.compose.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.example.favorite_video_game_genres.ui.theme.*
 
-
-//import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
-
 class MainActivity : ComponentActivity() {
 
     private var retrieveData = mutableListOf<Pair<String, Int>>()
+
     private var LDmode by mutableStateOf("Light")
     private var primaryColor by mutableStateOf(LightColorScheme.primary)
     private var secondaryColor by mutableStateOf(LightColorScheme.secondary)
@@ -128,13 +117,6 @@ class MainActivity : ComponentActivity() {
         var moonSizeY: Dp = 0.dp
         var moonSizeX: Dp = 0.dp
 
-        /* Phone height sizes
-            3.3 WQVGA - 533.0.dp
-            Nexus 5 - 616.0.dp
-            Pixel 3 - 737.0.dp
-            Pixel 6 - 829.0.dp
-            8 Foldout - 945.0.dp
-            */
         if(LocalConfiguration.current.screenHeightDp.dp < 650.dp)
         {
             switchPosY = LocalConfiguration.current.screenHeightDp.dp * .05f
@@ -269,7 +251,7 @@ class MainActivity : ComponentActivity() {
             Text(
                 text = "Favorite Video Game Genres",
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#000000")),
+                    color = textLdModeColor,
                     fontSize = 34.sp,
                     fontFamily = FontFamily.Cursive,
                     fontWeight = FontWeight.W900
@@ -305,7 +287,7 @@ class MainActivity : ComponentActivity() {
                     Text(
                         text = value.first,
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#000000")),
+                            color = textLDModeColor,
                             fontSize = 14.sp,
                             fontFamily = FontFamily.SansSerif,
                             fontWeight = FontWeight.Bold
@@ -317,7 +299,7 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier
                             .padding(start = 130.dp, bottom = 5.dp),
                         style = TextStyle(
-                            color = Color(android.graphics.Color.parseColor("#000000")),
+                            color = textLDModeColor,
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = FontFamily.SansSerif
@@ -345,7 +327,7 @@ class MainActivity : ComponentActivity() {
             {
                 Text(
                     text = "Insert your own choices!",
-                    color = Color(android.graphics.Color.parseColor("#000000")),
+                    color = textLDModeColor,
                     fontSize = 16.sp
                 )
             }
@@ -377,7 +359,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxWidth()
                     .padding(top = 35.dp, start = 20.dp, end = 20.dp),
                 style = TextStyle(
-                    color = Color(android.graphics.Color.parseColor("#000000")),
+                    color = textLdModeColor,
                     fontSize = 22.sp,
                     fontWeight = FontWeight.Bold,
                     fontFamily = FontFamily.SansSerif
@@ -444,7 +426,7 @@ class MainActivity : ComponentActivity() {
                             style = TextStyle(
                                 fontSize = 20.sp,
                                 fontFamily = FontFamily.SansSerif,
-                                color = Color(android.graphics.Color.parseColor("#000000"))
+                                color = textLdModeColor
                             ),
                             modifier = Modifier
                                 .padding(top = 10.dp)
@@ -469,7 +451,7 @@ class MainActivity : ComponentActivity() {
                                 style = TextStyle(
                                     fontSize = 20.sp,
                                     fontFamily = FontFamily.SansSerif,
-                                    color = Color(android.graphics.Color.parseColor("#000000"))
+                                    color = textLdModeColor
                                 ),
                                 modifier = Modifier.padding(top = 10.dp)
                                     .clickable { newOptionChecked = !newOptionChecked }
@@ -489,7 +471,7 @@ class MainActivity : ComponentActivity() {
                                 textStyle = TextStyle(
                                     fontSize = 14.sp,
                                     fontFamily = FontFamily.SansSerif,
-                                    color = Color(android.graphics.Color.parseColor("#000000")),
+                                    color = textLdModeColor,
                                 ),
                                 placeholder = { Text(text = "Enter your option here", style = TextStyle(fontSize = 14.sp)) },
                                 shape = CircleShape,
@@ -553,7 +535,7 @@ class MainActivity : ComponentActivity() {
                     text = "Submit",
                     textAlign = TextAlign.Center,
                     style = TextStyle(
-                        color = Color(android.graphics.Color.parseColor("#000000")),
+                        color = textLdModeColor,
                         fontSize = 18.sp,
                         fontFamily = FontFamily.SansSerif
                     )

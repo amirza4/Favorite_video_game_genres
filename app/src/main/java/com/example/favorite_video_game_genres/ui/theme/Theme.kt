@@ -21,6 +21,11 @@ val DarkColorScheme = darkColorScheme(
     tertiary = Pink80
 )
 
+//the three colors for our compliance
+// #DB864E
+// #DC6B2F
+// #E35205
+
 val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
