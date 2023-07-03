@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +25,11 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.*
 import androidx.compose.ui.focus.onFocusChanged
@@ -34,6 +40,13 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.draw.*
+import androidx.compose.ui.geometry.*
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +56,7 @@ import androidx.compose.ui.unit.*
 import androidx.navigation.NavController
 import androidx.navigation.compose.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.example.favorite_video_game_genres.ui.theme.*
 
 
 //import com.example.favorite_video_game_genres.ui.theme.Favorite_video_game_genresTheme
@@ -50,7 +64,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 class MainActivity : ComponentActivity() {
 
     private var retrieveData = mutableListOf<Pair<String, Int>>()
+    private var LDmode by mutableStateOf("Light")
+    private var primaryColor by mutableStateOf(LightColorScheme.primary)
+    private var secondaryColor by mutableStateOf(LightColorScheme.secondary)
+    private var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
+    private var textLDModeColor by mutableStateOf(Color.Black)
 
+    // Function runs first for retrieving the data from firestore
     private fun fetchFromFireBase(callback: () -> Unit) {
         val db = FirebaseFirestore.getInstance()
 
@@ -62,7 +82,7 @@ class MainActivity : ComponentActivity() {
                 }
                 callback()
             }
-            .addOnFailureListener {exception ->
+            .addOnFailureListener { exception ->
                 Log.d("errorTag", "Pulling data failed : ", exception)
             }
     }
@@ -71,7 +91,6 @@ class MainActivity : ComponentActivity() {
 
         fetchFromFireBase {
             setContent {
-
                 val navController = rememberNavController()
 
                 NavHost(
@@ -88,9 +107,151 @@ class MainActivity : ComponentActivity() {
                         InputScreen(navController = navController)
                     }
                 }
+                Overlay()
             }
         }
     }
+
+    @Composable
+    fun Overlay() {
+        var switchPosY: Dp = 0.dp
+        var switchPosX: Dp = 0.dp
+        var scaleOverlay = 1f
+        var textPosY: Dp = 0.dp
+        var textPosX: Dp = 0.dp
+        var sunPosY: Dp = 0.dp
+        var sunPosX: Dp = 0.dp
+        var sunSizeY: Dp = 0.dp
+        var sunSizeX: Dp = 0.dp
+        var moonPosY: Dp = 0.dp
+        var moonPosX: Dp = 0.dp
+        var moonSizeY: Dp = 0.dp
+        var moonSizeX: Dp = 0.dp
+
+        /* Phone height sizes
+            3.3 WQVGA - 533.0.dp
+            Nexus 5 - 616.0.dp
+            Pixel 3 - 737.0.dp
+            Pixel 6 - 829.0.dp
+            8 Foldout - 945.0.dp
+            */
+        if(LocalConfiguration.current.screenHeightDp.dp < 650.dp)
+        {
+            switchPosY = LocalConfiguration.current.screenHeightDp.dp * .05f
+            switchPosX = LocalConfiguration.current.screenWidthDp.dp * -.01f
+            textPosY = LocalConfiguration.current.screenHeightDp.dp * -.025f
+            textPosX = LocalConfiguration.current.screenWidthDp.dp * -.05f
+            sunPosY = LocalConfiguration.current.screenHeightDp.dp * .025f
+            sunPosX = LocalConfiguration.current.screenWidthDp.dp * .035f
+            sunSizeY = LocalConfiguration.current.screenHeightDp.dp * .04f
+            sunSizeX = LocalConfiguration.current.screenWidthDp.dp * .195f
+            moonPosY = LocalConfiguration.current.screenHeightDp.dp * .0235f
+            moonPosX = LocalConfiguration.current.screenWidthDp.dp * -.032f
+            moonSizeY = LocalConfiguration.current.screenHeightDp.dp * .035f
+            moonSizeX = LocalConfiguration.current.screenWidthDp.dp * .19f
+        }
+        else if(LocalConfiguration.current.screenHeightDp.dp >= 650.0.dp && LocalConfiguration.current.screenHeightDp.dp < 840.0.dp)
+        {
+            scaleOverlay = 1.25f
+            switchPosY = LocalConfiguration.current.screenHeightDp.dp * -.08f
+            switchPosX = LocalConfiguration.current.screenWidthDp.dp * -.13f
+            textPosY = LocalConfiguration.current.screenHeightDp.dp * -.133f
+            textPosX = LocalConfiguration.current.screenWidthDp.dp * -.157f
+            sunPosY = LocalConfiguration.current.screenHeightDp.dp * -.0939f
+            sunPosX = LocalConfiguration.current.screenWidthDp.dp * -.0752f
+            sunSizeY = LocalConfiguration.current.screenHeightDp.dp * .033f
+            sunSizeX = LocalConfiguration.current.screenWidthDp.dp * .185f
+            moonPosY = LocalConfiguration.current.screenHeightDp.dp * -.098f
+            moonPosX = LocalConfiguration.current.screenWidthDp.dp * -.16f
+            moonSizeY = LocalConfiguration.current.screenHeightDp.dp * .024f
+            moonSizeX = LocalConfiguration.current.screenWidthDp.dp * .13f
+        }
+        else if(LocalConfiguration.current.screenHeightDp.dp >= 840.dp)
+        {
+            scaleOverlay = 1.5f
+            switchPosY = LocalConfiguration.current.screenHeightDp.dp * -.15f
+            switchPosX = LocalConfiguration.current.screenWidthDp.dp * -.2f
+            textPosY = LocalConfiguration.current.screenHeightDp.dp * -.19f
+            textPosX = LocalConfiguration.current.screenWidthDp.dp * -.215f
+            sunPosY = LocalConfiguration.current.screenHeightDp.dp * -.162f
+            sunPosX = LocalConfiguration.current.screenWidthDp.dp * -.138f
+            sunSizeY = LocalConfiguration.current.screenHeightDp.dp * .027f
+            sunSizeX = LocalConfiguration.current.screenWidthDp.dp * .16f
+            moonPosY = LocalConfiguration.current.screenHeightDp.dp * -.165f
+            moonPosX = LocalConfiguration.current.screenWidthDp.dp * -.191f
+            moonSizeY = LocalConfiguration.current.screenHeightDp.dp * .02f
+            moonSizeX = LocalConfiguration.current.screenWidthDp.dp * .11f
+        }
+
+        var isDarkMode by remember { mutableStateOf(false) }
+
+        Box(
+            modifier = Modifier.fillMaxSize()
+                .absoluteOffset((0).dp, (-100).dp)
+                .scale(scaleOverlay),
+            contentAlignment = Alignment.BottomEnd
+        )
+        {
+            Switch(
+                checked = isDarkMode,
+                onCheckedChange = { checked ->
+                    isDarkMode = checked
+                    if (checked) {
+                        LDmode = "Dark"
+                        textLDModeColor = Color.White
+                        primaryColor = DarkColorScheme.primary
+                        secondaryColor = DarkColorScheme.secondary
+                        tertiaryColor = DarkColorScheme.tertiary
+                        // Log.d("DarkMode", "swapped to Dark")
+                    } else {
+                        LDmode = "Light"
+                        textLDModeColor = Color.Black
+                        primaryColor = LightColorScheme.primary
+                        secondaryColor = LightColorScheme.secondary
+                        tertiaryColor = LightColorScheme.tertiary
+                        // Log.d("LightMode", "swapped to Light")
+                    }
+                },
+                modifier = Modifier
+                    .offset(switchPosX, switchPosY),
+                colors = SwitchDefaults.colors(
+                    checkedBorderColor = Color.White,
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = Color.Black,
+                    uncheckedBorderColor = Color.Black,
+                    uncheckedThumbColor = Color.Black,
+                    uncheckedTrackColor = Color.White
+                )
+            )
+            Text(
+                text = LDmode,
+                style = TextStyle(
+                    color = textLDModeColor,
+                    fontWeight = FontWeight.Bold
+                ),
+                modifier = Modifier.offset(textPosX, textPosY)
+            )
+            if(isDarkMode)
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.moon1),
+                    contentDescription = null,
+                    modifier = Modifier.offset(moonPosX, moonPosY)
+                        .size(moonSizeX, moonSizeY)
+                )
+            }
+            else
+            {
+                Image(
+                    painter = painterResource(id = R.drawable.sun1),
+                    contentDescription = null,
+                    modifier = Modifier.offset(sunPosX, sunPosY)
+                        .size(sunSizeX, sunSizeY)
+                )
+            }
+        }
+    }
+
 
     @SuppressLint("SuspiciousIndentation")
     @Composable
@@ -413,20 +574,6 @@ class MainActivity : ComponentActivity() {
         }
 
         callback()
-        /* SYNCHRONOUS WAY IF PREFERRED
-
-        var tasks = mutableListOf<Task<Void>>()
-        val graphData = FirebaseFirestore.getInstance().collection("game_counts").document("84c8g5rVr8KJliP4108c")
-        for((i, value) in checked.value.withIndex())
-        {
-            if(value)
-            {
-                retrieveData[i] = retrieveData[i].copy(second = retrieveData[i].second + 1)
-                tasks.add(graphData.update(retrieveData[i].first, retrieveData[i].second))
-            }
-        }
-        Tasks.whenAllSuccess<Void>(tasks).addOnSuccessListener { callback() }
-        */
     }
 
     private fun newGenreCheck(check: Boolean, name: String, callback: () -> Unit)

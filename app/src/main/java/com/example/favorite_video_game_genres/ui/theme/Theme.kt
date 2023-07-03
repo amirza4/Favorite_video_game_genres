@@ -15,13 +15,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
+val DarkColorScheme = darkColorScheme(
+    primary = Black,
     secondary = PurpleGrey80,
     tertiary = Pink80
 )
 
-private val LightColorScheme = lightColorScheme(
+val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40
@@ -36,6 +36,10 @@ private val LightColorScheme = lightColorScheme(
     onSurface = Color(0xFF1C1B1F),
     */
 )
+
+/*Code below is saying if the device being used is already in darkMode then it will apply those changes
+until the user changes it themselves on their device
+ */
 
 @Composable
 fun Favorite_video_game_genresTheme(
@@ -68,3 +72,27 @@ fun Favorite_video_game_genresTheme(
         content = content
     )
 }
+
+//@Composable
+//fun TestTheme(
+//    darkTheme: Boolean = isSystemInDarkTheme(),
+//    dynamicColor: Boolean = false,
+//    content: @Composable() -> Unit
+//){
+//  val colorScheme = when{
+//      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+//          val context = LocalContext.current
+//          if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+//      }
+//      darkTheme -> DarkColorScheme
+//      else -> LightColorScheme
+//  }
+//    val view = LocalView.current
+//    if (!view.isInEditMode) {
+//        SideEffect {
+//            val window = (view.context as Activity).window
+//            window.statusBarColor = colorScheme.primary.toArgb()
+//            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
+//        }
+//    }
+//}
