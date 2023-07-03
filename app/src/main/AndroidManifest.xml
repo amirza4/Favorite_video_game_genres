@@ -21,7 +21,8 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.Favorite_video_game_genres"
-            android:enableOnBackInvokedCallback="true">
+            android:enableOnBackInvokedCallback="true"
+            android:screenOrientation="fullUser">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
