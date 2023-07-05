@@ -54,6 +54,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class MainActivity : ComponentActivity() {
 
     private var retrieveData = mutableListOf<Pair<String, Int>>()
+    private val cursiveFontFamily = TextStyle(fontFamily = FontFamily.Cursive, fontSize = 25.sp, fontWeight = FontWeight.Bold)
 
     private var LDmode by mutableStateOf("Light")
     private var primaryColor by mutableStateOf(LightColorScheme.primary)
@@ -91,7 +92,8 @@ class MainActivity : ComponentActivity() {
                         TopAppBar(
                             modifier = Modifier.height(40.dp), // Height of AppBar
                             title = {
-                                Text("Favorite Video Game Genre", style = MaterialTheme.typography.headlineSmall)  // Change Text style for the title
+                                Text("Favorite Video Game Genre", style = cursiveFontFamily);  // Change Text style for the title
+
                             },
                             navigationIcon = {
                                 if(navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
@@ -264,20 +266,6 @@ class MainActivity : ComponentActivity() {
                 .background(primaryColor)
         )
         {
-            Text(
-                text = "Favorite Video Game Genres",
-                style = TextStyle(
-                    color = textLDModeColor,
-                    fontSize = 34.sp,
-                    fontFamily = FontFamily.Cursive,
-                    fontWeight = FontWeight.W900
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 20.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
             retrieveData.forEach { value ->
                 Box(
                     modifier = Modifier
