@@ -117,7 +117,6 @@ class Overlay {
                         dataManip.primaryColor = DarkColorScheme.primary
                         dataManip.secondaryColor = DarkColorScheme.secondary
                         dataManip.tertiaryColor = DarkColorScheme.tertiary
-                        // Log.d("DarkMode", "swapped to Dark")
                     } else {
                         CoroutineScope(Dispatchers.IO).launch { dataManip.updateLDMode(false) }
                         dataManip.LDmode = "Light"
@@ -125,7 +124,6 @@ class Overlay {
                         dataManip.primaryColor = LightColorScheme.primary
                         dataManip.secondaryColor = LightColorScheme.secondary
                         dataManip.tertiaryColor = LightColorScheme.tertiary
-                        // Log.d("LightMode", "swapped to Light")
                     }
                 },
                 modifier = Modifier

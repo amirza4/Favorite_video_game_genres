@@ -2,7 +2,6 @@ package com.example.favorite_video_game_genres
 
 import android.content.Context
 import android.net.ConnectivityManager
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,7 +39,6 @@ class DataManipulation(contextParam: Context) {
                         data!!.toSortedMap().forEach { (key, value) ->
                             retrieveData.add(Pair(key, value.toString().toFloat().toInt()))
                         }
-                        Log.d("Taggy", "Fetched data")
                         fetched = true
                         callback()
                         withContext(Dispatchers.IO)
@@ -54,16 +52,18 @@ class DataManipulation(contextParam: Context) {
                             }
                             else
                             {
-                                if(votesList.size > retrieveData.size)
+                                if(votesList.size != retrieveData.size)
                                 {
                                     clearCache()
+                                    retrieveData.forEachIndexed { index, (key, value) ->
+                                        cache.writeData(Votes(index, key, value.toString().toFloat().toInt()))
+                                    }
                                 }
-                                retrieveData.forEachIndexed { index, (key, value) ->
-                                    cache.updateData(Votes(index, key, value.toString().toFloat().toInt()))
-                                    Log.d("Taggy", "retreiveData[$index] ------------- $key ------------ $value")
-                                }
-                                votesList.forEach { (ID, fields, votes) ->
-                                    Log.d("Taggy", "Cache[$ID] ------------- $fields ------------ $votes")
+                                else
+                                {
+                                    retrieveData.forEachIndexed { index, (key, value) ->
+                                        cache.updateData(Votes(index, key, value.toString().toFloat().toInt()))
+                                    }
                                 }
                                 DataCaching.closeCacheDb()
                             }
@@ -75,7 +75,6 @@ class DataManipulation(contextParam: Context) {
                     val connectivityManager = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
                     if(connectivityManager.activeNetwork == null)
                     {
-                        Log.d("Taggy", "No Internet")
                         CoroutineScope(Dispatchers.Main).launch()
                         {
                             votesList = cache?.getData()
@@ -84,13 +83,11 @@ class DataManipulation(contextParam: Context) {
                             }
                             DataCaching.closeCacheDb()
                             fetched = true
-                            Log.d("Taggy", "Fetched from cache")
                             callback()
                         }
                     }
                     else
                     {
-                        Log.d("Taggy", "Firebase DB is down + $exception")
                         CoroutineScope(Dispatchers.IO).launch() {
                             votesList!!.forEach { (_, fields, votes) ->
                                 retrieveData.add(Pair(fields, votes))
