@@ -1,13 +1,16 @@
 package com.example.favorite_video_game_genres
 
 import android.os.Bundle
-import android.view.ViewGroup
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.ui.Modifier
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 
 class WebView(activityContext: Any?) : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,25 +19,32 @@ class WebView(activityContext: Any?) : ComponentActivity() {
         }
     }
 
-@Composable
-fun WebViewPage(mainActivity: MainActivity){
-    //String aUrl contains the its URL
-    val aUrl = "https://its.ny.gov/"
+    @Composable
+    fun WebViewPage(mainActivity: MainActivity) {
+        var webViewContent: WebView? = null
 
-    AndroidView(factory = { context ->
-        WebView(context).apply {
-            layoutParams = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-            )
-            webViewClient = WebViewClient()
-            loadUrl(aUrl)
+        Button(onClick = {
+            webViewContent?.loadUrl("https://its.ny.gov/")
+        }) {
+            Text("Open Web View")
         }
-        }, update = {
-            it.loadUrl(aUrl)
-    }
-    )
+
+        AndroidView(
+            modifier = Modifier.fillMaxSize(),
+            factory = { context ->
+                WebView(context).apply {
+                    webViewContent = this
+                    webViewClient = WebViewClient()
+                    settings.javaScriptEnabled = true
+                }
+            },
+            update = {}
+        )
     }
 }
+
+
+
+
 
 
