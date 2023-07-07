@@ -12,13 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 
-class WebView(activityContext: Any?) : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-        }
-    }
-
+class WebView {
     @Composable
     fun WebViewPage(mainActivity: MainActivity) {
         var webViewContent: WebView? = null
