@@ -8,8 +8,6 @@ more user-friendly.
 
 
 ## **How-To-Guide**
-<img src="htg.png" align = "right" />
-
 
 
 ## **Credits**
