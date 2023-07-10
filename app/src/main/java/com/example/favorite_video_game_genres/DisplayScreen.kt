@@ -22,7 +22,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -42,20 +41,6 @@ class DisplayScreen {
                 .background(dataManip.primaryColor)
         )
         {
-            Text(
-                text = "Favorite Video Game Genres",
-                style = TextStyle(
-                    color = dataManip.textLDModeColor,
-                    fontSize = 34.sp,
-                    fontFamily = FontFamily.Cursive,
-                    fontWeight = FontWeight.W900
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 20.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
             dataManip.retrieveData.forEach { value ->
                 Box(
                     modifier = Modifier
