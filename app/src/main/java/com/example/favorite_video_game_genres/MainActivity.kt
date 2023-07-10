@@ -19,9 +19,9 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.*
 import androidx.navigation.compose.*
-import androidx.compose.ui.text.style.TextAlign
 
 
 class MainActivity : ComponentActivity() {
@@ -84,26 +84,30 @@ class MainActivity : ComponentActivity() {
                     )
                     //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
                     Spacer(modifier = Modifier.height(16.dp))
-                },
-                content = {
-                    NavHost(navController, startDestination = "Loading") {
-                        composable("Loading") { popups.Loading(dataManip, navController) }
-                        composable("DisplayScreen") {
-                            displayScreen.DisplayScreen(
-                                dataManip,
-                                navController
-                            )
-                        }
-                        composable("InputScreen") {
-                            inputScreen.InputScreen(
-                                dataManip,
-                                navController
-                            )
-                        }
-                        composable("WebView") { WebViewPage(navController) }
-                    }
                 }
-            )
+            ) {
+                NavHost(navController, startDestination = "Loading") {
+                    composable("Loading") { popups.Loading(dataManip, navController) }
+                    composable("DisplayScreen") {
+                        displayScreen.DisplayScreen(
+                            dataManip,
+                            navController
+                        )
+                    }
+                    composable("InputScreen") {
+                        inputScreen.InputScreen(
+                            dataManip,
+                            navController
+                        )
+                    }
+                        composable("WebView") {
+                            webViewPage()
+                        }
+//                    composable("WebView") {
+//                        webViewPage(urlToRender = "https://raw.githubusercontent.com/amirza4/Favorite_video_game_genres/Offline_Support/README.md")
+//                    }
+                }
+            }
             overlay.Overlay(dataManip)
         }
     }
