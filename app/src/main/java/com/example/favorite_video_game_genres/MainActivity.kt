@@ -71,6 +71,8 @@ class MainActivity : ComponentActivity() {
                                             tint = dataManip.textLDModeColor
                                         )
                                     }
+                                } else{
+                                    navController.navigate("InputScreen")
                                 }
                             },
                             actions = {
