@@ -6,6 +6,7 @@ import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.*
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.*
@@ -46,69 +47,67 @@ class MainActivity : ComponentActivity() {
             } else {
                 barColor = Color.Black
             }
+            Box {
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            modifier = Modifier.height(40.dp), // Height of AppBar
+                            colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = barColor),
+                            title = {
+                                Text(
+                                    "Favorite Video Game Genre",
+                                    style = MaterialTheme.typography.headlineSmall,
+                                    textAlign = TextAlign.Center,
+                                    color = dataManip.textLDModeColor
+                                )  // Change Text style for the title
+                            },
+                            navigationIcon = {
 
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        modifier = Modifier.height(40.dp), // Height of AppBar
-                        colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = barColor),
-                        title = {
-                            Text(
-                                "Favorite Video Game Genre",
-                                style = MaterialTheme.typography.headlineSmall,
-                                textAlign = TextAlign.Center,
-                                color = dataManip.textLDModeColor
-                            )  // Change Text style for the title
-                        },
-                        navigationIcon = {
-
-                            if (navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
-                                IconButton(onClick = { navController.popBackStack() }) {
+                                if (navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
+                                    IconButton(onClick = { navController.popBackStack() }) {
+                                        Icon(
+                                            Icons.Filled.ArrowBack,
+                                            contentDescription = "Back",
+                                            tint = dataManip.textLDModeColor
+                                        )
+                                    }
+                                }
+                            },
+                            actions = {
+                                IconButton(onClick = { navController.navigate("WebView") }) {
                                     Icon(
-                                        Icons.Filled.ArrowBack,
-                                        contentDescription = "Back",
+                                        Icons.Default.ArrowForward,
+                                        contentDescription = "How-To-Guide",
                                         tint = dataManip.textLDModeColor
                                     )
                                 }
                             }
-                        },
-                        actions = {
-                            IconButton(onClick = { navController.navigate("WebView") }) {
-                                Icon(
-                                    Icons.Default.ArrowForward,
-                                    contentDescription = "How-To-Guide",
-                                    tint = dataManip.textLDModeColor
-                                )
-                            }
+                        )
+                        //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
+                ) {
+                    NavHost(navController, startDestination = "Loading") {
+                        composable("Loading") { popups.Loading(dataManip, navController) }
+                        composable("DisplayScreen") {
+                            displayScreen.DisplayScreen(
+                                dataManip,
+                                navController
+                            )
                         }
-                    )
-                    //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
-                    Spacer(modifier = Modifier.height(16.dp))
-                }
-            ) {
-                NavHost(navController, startDestination = "Loading") {
-                    composable("Loading") { popups.Loading(dataManip, navController) }
-                    composable("DisplayScreen") {
-                        displayScreen.DisplayScreen(
-                            dataManip,
-                            navController
-                        )
-                    }
-                    composable("InputScreen") {
-                        inputScreen.InputScreen(
-                            dataManip,
-                            navController
-                        )
-                    }
+                        composable("InputScreen") {
+                            inputScreen.InputScreen(
+                                dataManip,
+                                navController
+                            )
+                        }
                         composable("WebView") {
                             webViewPage()
                         }
-//                    composable("WebView") {
-//                        webViewPage(urlToRender = "https://raw.githubusercontent.com/amirza4/Favorite_video_game_genres/Offline_Support/README.md")
-//                    }
+                    }
                 }
+                overlay.Overlay(dataManip)
             }
-            overlay.Overlay(dataManip)
         }
     }
 }
