@@ -8,7 +8,8 @@ more user-friendly.
 
 
 ## How-To-Guide
-1. 
+![image](https://github.com/amirza4/Favorite_video_game_genres/assets/127438531/8e4f04cf-4da1-4178-8f9d-d7bea9b2f920)
+
 
 
 ## Credits
