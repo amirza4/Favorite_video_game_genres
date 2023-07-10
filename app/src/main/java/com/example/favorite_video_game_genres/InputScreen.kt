@@ -242,10 +242,10 @@ class InputScreen {
                     {
                         dataManip.updateDB(checked)
                         {
-                            navController.navigate("DisplayScreen")
-                            {
-                                popUpTo("InputScreen")
-                            }
+//                            navController.navigate("DisplayScreen")
+//                            {
+//                                popUpTo("InputScreen")
+//                            }
                         }
                     }
                 },
