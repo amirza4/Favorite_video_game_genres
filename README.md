@@ -8,7 +8,7 @@ more user-friendly.
 
 
 ## How-To-Guide
-l
+1. Step 1
 
 
 ## Credits
