@@ -8,7 +8,7 @@ more user-friendly.
 
 
 ## **How-To-Guide**
-![<img height="25" src="C:\Repos\Favorite_video_game_genres\app\src\main\res\drawable-normal\htg.png" width="24"/>]()
+<img src="htg.png" align = "right" />
 
 
 

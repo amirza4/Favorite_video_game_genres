@@ -13,7 +13,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-    fun webViewPage(modifier: Modifier = Modifier,  urlToRender: String = "https://raw.githubusercontent.com/amirza4/Favorite_video_game_genres/Offline_Support/README.md") {
+    fun webViewPage(modifier: Modifier = Modifier,  urlToRender: String = "https://github.com/amirza4/Favorite_video_game_genres/blob/main/README.md") {
     AndroidView(
         modifier = modifier.fillMaxSize(),
         factory = { context ->
