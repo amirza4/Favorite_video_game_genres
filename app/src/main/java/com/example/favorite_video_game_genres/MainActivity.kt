@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -21,6 +22,7 @@ import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.compose.*
 import androidx.compose.ui.text.style.TextAlign
+
 
 class MainActivity : ComponentActivity() {
 
@@ -39,12 +41,9 @@ class MainActivity : ComponentActivity() {
             val popups = Popups()
             var barColor: Color
 
-            if(dataManip.LDmode == "Light")
-            {
+            if (dataManip.LDmode == "Light") {
                 barColor = Color.White
-            }
-            else
-            {
+            } else {
                 barColor = Color.Black
             }
 
@@ -54,15 +53,32 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.height(40.dp), // Height of AppBar
                         colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = barColor),
                         title = {
-                            Text("Favorite Video Game Genre", style = MaterialTheme.typography.headlineSmall, textAlign = TextAlign.Center, color = dataManip.textLDModeColor )  // Change Text style for the title
+                            Text(
+                                "Favorite Video Game Genre",
+                                style = MaterialTheme.typography.headlineSmall,
+                                textAlign = TextAlign.Center,
+                                color = dataManip.textLDModeColor
+                            )  // Change Text style for the title
                         },
                         navigationIcon = {
 
-                            if(navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
-                                IconButton(onClick = { navController.popBackStack() })
-                                {
-                                    Icon(Icons.Filled.ArrowBack, contentDescription = "Back", tint = dataManip.textLDModeColor)
+                            if (navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
+                                IconButton(onClick = { navController.popBackStack() }) {
+                                    Icon(
+                                        Icons.Filled.ArrowBack,
+                                        contentDescription = "Back",
+                                        tint = dataManip.textLDModeColor
+                                    )
                                 }
+                            }
+                        },
+                        actions = {
+                            IconButton(onClick = { navController.navigate("WebView") }) {
+                                Icon(
+                                    Icons.Default.ArrowForward,
+                                    contentDescription = "How-To-Guide",
+                                    tint = dataManip.textLDModeColor
+                                )
                             }
                         }
                     )
@@ -71,9 +87,20 @@ class MainActivity : ComponentActivity() {
                 },
                 content = {
                     NavHost(navController, startDestination = "Loading") {
-                        composable("Loading") {popups.Loading(dataManip, navController)}
-                        composable("DisplayScreen") { displayScreen.DisplayScreen(dataManip, navController) }
-                        composable("InputScreen") { inputScreen.InputScreen(dataManip, navController) }
+                        composable("Loading") { popups.Loading(dataManip, navController) }
+                        composable("DisplayScreen") {
+                            displayScreen.DisplayScreen(
+                                dataManip,
+                                navController
+                            )
+                        }
+                        composable("InputScreen") {
+                            inputScreen.InputScreen(
+                                dataManip,
+                                navController
+                            )
+                        }
+                        composable("WebView") { WebViewPage(navController) }
                     }
                 }
             )
