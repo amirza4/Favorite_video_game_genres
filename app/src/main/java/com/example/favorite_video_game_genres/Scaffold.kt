@@ -1,7 +1,6 @@
 package com.example.favorite_video_game_genres
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -62,8 +61,8 @@ class Scaffold {
                         }
                     }
                 )
-                //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
-                Spacer(modifier = Modifier.height(16.dp))
+//                //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
+//                Spacer(modifier = Modifier.height(16.dp))
             },
             content = {PaddingValues -> content(PaddingValues)}
         )
