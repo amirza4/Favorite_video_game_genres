@@ -11,17 +11,17 @@ more user-friendly.
 
 ![htg.png](C:\Repos\Favorite_video_game_genres\app\src\main\res\drawable-normal\htg.png)
 
-Back Arrow : Goes back to the previous screen
+1. [ ] Back Arrow : Goes back to the previous screen
 
-Right Arrow : This arrow takes the user to the WebView screen where the How-To-Guide is located
+2. [ ] Right Arrow : This arrow takes the user to the WebView screen where the How-To-Guide is located
 
-On the right hand side is where the name of genres are displayed along with the up-to-date votes for the categories
+3. [ ] On the right hand side is where the name of genres are displayed along with the up-to-date votes for the categories
 
-The _Insert your own choices button_ : Allows user to vote for the genre they like, even including an option that lets them add their own choice in
+4. [ ] The _Insert your own choices button_ : Allows user to vote for the genre they like, even including an option that lets them add their own choice in
 
-Light/Dark mode : User can change the app's display by clicking on the switch
+5. [ ] Light/Dark mode : User can change the app's display by clicking on the switch
 
-Custom check box : To enter your own choice you must select the checkbox first and then type in the genre you'd like to add.  
+6. [ ] Custom check box : To enter your own choice you must select the checkbox first and then type in the genre you'd like to add.  
 
 ## **Credits**
 
