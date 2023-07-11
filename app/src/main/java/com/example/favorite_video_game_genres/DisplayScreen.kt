@@ -22,6 +22,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -41,90 +42,89 @@ class DisplayScreen {
                 .background(dataManip.primaryColor)
         )
         {
-            dataManip.retrieveData.forEach { value ->
-            Text(
-                text = "Favorite Video Game Genres",
-                style = TextStyle(
-                    color = dataManip.textLDModeColor,
-                    fontSize = 34.sp,
-                    fontFamily = FontFamily.Cursive,
-                    fontWeight = FontWeight.W900
-                ),
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 20.dp, bottom = 20.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-            dataManip.retrieveData.forEach { value -> //Create bar graph for each row in the DB
-                Box(
+                Text(
+                    text = "Favorite Video Game Genres",
+                    style = TextStyle(
+                        color = dataManip.textLDModeColor,
+                        fontSize = 34.sp,
+                        fontFamily = FontFamily.Cursive,
+                        fontWeight = FontWeight.W900
+                    ),
+                    textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(30.dp)
+                        .padding(top = 20.dp, bottom = 20.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
-                {
-                    Canvas(
-
+                dataManip.retrieveData.forEach { value -> //Create bar graph for each row in the DB
+                    Box(
                         modifier = Modifier
-                            .fillMaxSize()
-                            .padding(start = 125.dp)
+                            .fillMaxWidth()
+                            .height(30.dp)
                     )
                     {
-                        drawRect(
-                            color = (dataManip.secondaryColor), // Create bars
-                            size = Size(
-                                (size.width - 15.dp.toPx()) * (value.second.toFloat() / dataManip.retrieveData.maxOfOrNull { it.second }!!),
-                                size.height
+                        Canvas(
+
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(start = 125.dp)
+                        )
+                        {
+                            drawRect(
+                                color = (dataManip.secondaryColor), // Create bars
+                                size = Size(
+                                    (size.width - 15.dp.toPx()) * (value.second.toFloat() / dataManip.retrieveData.maxOfOrNull { it.second }!!),
+                                    size.height
+                                ),
+                            )
+                        }
+                        Text(
+                            text = value.first,
+                            style = TextStyle(
+                                color = dataManip.textLDModeColor,
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily.SansSerif,
+                                fontWeight = FontWeight.Bold
                             ),
+                            modifier = Modifier.padding(top = 5.dp, start = 5.dp)
+                        )
+                        Text(
+                            text = value.second.toString(),
+                            modifier = Modifier
+                                .padding(start = 130.dp, bottom = 5.dp),
+                            style = TextStyle(
+                                color = dataManip.textLDModeColor,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
+                                fontFamily = FontFamily.SansSerif
+                            )
                         )
                     }
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+                Button(
+                    onClick =
+                    {
+                        navController.navigate("InputScreen")
+                        {
+                            popUpTo("DisplayScreen")
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.CenterHorizontally)
+                        .padding(start = 60.dp, end = 60.dp, bottom = 10.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = (dataManip.tertiaryColor)
+                    ),
+                )
+                {
                     Text(
-                        text = value.first,
-                        style = TextStyle(
-                            color = dataManip.textLDModeColor,
-                            fontSize = 14.sp,
-                            fontFamily = FontFamily.SansSerif,
-                            fontWeight = FontWeight.Bold
-                        ),
-                        modifier = Modifier.padding(top = 5.dp, start = 5.dp)
-                    )
-                    Text(
-                        text = value.second.toString(),
-                        modifier = Modifier
-                            .padding(start = 130.dp, bottom = 5.dp),
-                        style = TextStyle(
-                            color = dataManip.textLDModeColor,
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
-                            fontFamily = FontFamily.SansSerif
-                        )
+                        text = "Insert your own choices!",
+                        color = dataManip.textLDModeColor,
+                        fontSize = 16.sp
                     )
                 }
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-            Button(
-                onClick =
-                {
-                    navController.navigate("InputScreen")
-                    {
-                        popUpTo("DisplayScreen")
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally)
-                    .padding(start = 60.dp, end = 60.dp, bottom = 10.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = (dataManip.tertiaryColor)
-                ),
-            )
-            {
-                Text(
-                    text = "Insert your own choices!",
-                    color = dataManip.textLDModeColor,
-                    fontSize = 16.sp
-                )
-            }
         }
     }
 }
