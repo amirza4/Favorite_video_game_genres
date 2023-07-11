@@ -36,6 +36,7 @@ class Overlay {
     @SuppressLint("NotConstructor")
     @Composable
     fun Overlay(dataManip: DataManipulation) {
+
         var switchPosY: Dp = 0.dp
         var switchPosX: Dp = 0.dp
         var scaleOverlay = 1f
@@ -50,7 +51,7 @@ class Overlay {
         var moonSizeY: Dp = 0.dp
         var moonSizeX: Dp = 0.dp
 
-        if(LocalConfiguration.current.screenHeightDp.dp < 650.dp)
+        if(LocalConfiguration.current.screenHeightDp.dp < 650.dp) //Organizing LD Switch position based on phone size
         {
             switchPosY = LocalConfiguration.current.screenHeightDp.dp * .05f
             switchPosX = LocalConfiguration.current.screenWidthDp.dp * -.01f
@@ -108,7 +109,7 @@ class Overlay {
         {
             Switch(
                 checked = isDarkMode,
-                onCheckedChange = { checked ->
+                onCheckedChange = { checked -> //LD Mode swap
                     isDarkMode = checked
                     if (checked) {
                         CoroutineScope(Dispatchers.IO).launch { dataManip.updateLDMode(true) }

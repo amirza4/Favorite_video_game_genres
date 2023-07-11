@@ -56,7 +56,7 @@ class DisplayScreen {
                     .padding(top = 20.dp, bottom = 20.dp)
                     .align(Alignment.CenterHorizontally)
             )
-            dataManip.retrieveData.forEach { value ->
+            dataManip.retrieveData.forEach { value -> //Create bar graph for each row in the DB
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -71,7 +71,7 @@ class DisplayScreen {
                     )
                     {
                         drawRect(
-                            color = (dataManip.secondaryColor),
+                            color = (dataManip.secondaryColor), // Create bars
                             size = Size(
                                 (size.width - 15.dp.toPx()) * (value.second.toFloat() / dataManip.retrieveData.maxOfOrNull { it.second }!!),
                                 size.height

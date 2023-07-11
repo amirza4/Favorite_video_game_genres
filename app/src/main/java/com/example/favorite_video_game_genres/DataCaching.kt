@@ -16,17 +16,18 @@ import androidx.room.Update
 data class Votes(
     @PrimaryKey val ID: Int,
     val fields: String,
-    var votes: Int
+    var votes: Int //these are the tables and columns
 )
 
 @Entity
-data class LDMode(
+data class Setting(
     @PrimaryKey val ID: Int,
-    var lDMode: Boolean
+    var lDMode: Boolean?,
+    var cameraPermission: Boolean?
 )
 
 @Dao
-interface UserDao
+interface UserDao // the sql lite commands linked to specific tables
 {
     @Query("SELECT * FROM Votes")
     suspend fun getData(): List<Votes>
@@ -40,40 +41,37 @@ interface UserDao
     @Delete
     suspend fun deleteData(Votes: Votes)
 
-    @Query("SELECT lDmode FROM LDMode WHERE ID=0")
+    @Query("SELECT lDmode FROM Setting WHERE ID=0")
     suspend fun getMode(): Boolean
 
-    @Insert
-    suspend fun createMode(LDMode: LDMode)
+    @Query("INSERT INTO Setting (ID, lDMode) Values (0, :LDMode)")
+    suspend fun createMode(LDMode: Boolean)
 
-    @Update
-    suspend fun updateMode(LDMode: LDMode)
+    @Query("UPDATE Setting SET lDMode = :LDMode WHERE ID = 0")
+    suspend fun updateMode(LDMode: Boolean)
+
+    @Query("SELECT cameraPermission FROM Setting WHERE ID = 0")
+    suspend fun getCameraPermission(): Boolean
+
+    @Query("INSERT INTO Setting(ID, cameraPermission) VALUES (0, :cameraPermission)")
+    suspend fun createCameraPermission(cameraPermission: Boolean)
+
+    @Query("UPDATE Setting SET cameraPermission = :cameraPermission WHERE ID = 0")
+    suspend fun updateCameraPermission(cameraPermission: Boolean)
 }
 
-@Database([Votes::class, LDMode::class], version = 1, exportSchema = false)
+@Database([Votes::class, Setting::class], version = 2, exportSchema = false)
 abstract class DataCaching : RoomDatabase() {
     abstract fun userDao(): UserDao
     companion object {
         @Volatile
-        var dbOpen: Boolean = false
-        var Db: DataCaching? = null
+        lateinit var Db: DataCaching
 
-        fun createCacheDb(context: Context): DataCaching? {
-            if (!dbOpen)
-            {
-                dbOpen = true
-                Db = Room.databaseBuilder(context.applicationContext, DataCaching::class.java, "database1").build()
-                return Db
-            } else
-            {
-                return null
-            }
-        }
-
-        fun closeCacheDb() {
-            Db?.close()
-            Db = null
-            dbOpen = false
+        fun createCacheDb(context: Context): DataCaching {
+            Db = Room.databaseBuilder(context.applicationContext, DataCaching::class.java, "database1")
+                .fallbackToDestructiveMigration()
+                .build()
+            return Db
         }
     }
 }

@@ -1,9 +1,17 @@
 package com.example.favorite_video_game_genres
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,12 +19,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -33,11 +43,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -47,11 +59,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class InputScreen {
 
-    @SuppressLint("NotConstructor")
+    @SuppressLint("NotConstructor", "MutableCollectionMutableState")
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
     @Composable
     fun InputScreen(dataManip: DataManipulation, navController: NavController) {
@@ -62,15 +79,17 @@ class InputScreen {
         val state = rememberScrollState()
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusController = LocalFocusManager.current
+
         Column(modifier = Modifier
             .background(dataManip.primaryColor)
             .fillMaxSize()
             .verticalScroll(state)
-            .clickable {
+            .clickable { // clears focus if clicked outside textfield
                 focusController.clearFocus()
             }
         )
         {
+            //CameraScreenButton(navController)
             Text(
                 text = stringResource(R.string.labelName),
                 textAlign = TextAlign.Center,
@@ -97,7 +116,7 @@ class InputScreen {
             {
                 listHeight = (getScreenHeight * .5f)
             }
-            else if(getScreenHeight >= 600.0.dp && getScreenHeight < 700.0.dp)
+            else if(getScreenHeight >= 600.0.dp && getScreenHeight < 700.0.dp) //changing checklist height depending on phone sixe
             {
                 listHeight = (getScreenHeight * .6f)
             }
@@ -112,7 +131,7 @@ class InputScreen {
                     .height(listHeight)
             )
             {
-                items(dataManip.retrieveData.size) { i ->
+                items(dataManip.retrieveData.size) { i -> //create checkboxes for each record
                     Row() {
                         var check by remember { mutableStateOf(checked.getOrNull(i) ?: false) }
                         Checkbox(
@@ -125,14 +144,15 @@ class InputScreen {
                         )
                         if(checked.getOrNull(i) == null)
                         {
-                            checked.add(check)
+                            checked.add(check) // if checkbox getting checked for the first time, add to array
                         }
                         else
                         {
-                            checked[i] = check
+                            checked[i] = check // otherwise just update the value
                         }
                         var name: String = dataManip.retrieveData[i].first
-                        if(dataManip.retrieveData[i].first == "MMORPG")
+
+                        if(dataManip.retrieveData[i].first == "MMORPG") //Name adjustment
                         {
                             name += " (Massive Multiplayer Online Role-Playing Game)"
                         }
@@ -153,7 +173,7 @@ class InputScreen {
                         )
                     }
 
-                    if(i == dataManip.retrieveData.size - 1)
+                    if(i == dataManip.retrieveData.size - 1) // For new custom made checkbox
                     {
                         Row()
                         {
@@ -172,7 +192,8 @@ class InputScreen {
                                     fontFamily = FontFamily.SansSerif,
                                     color = dataManip.textLDModeColor
                                 ),
-                                modifier = Modifier.padding(top = 10.dp)
+                                modifier = Modifier
+                                    .padding(top = 10.dp)
                                     .clickable { newOptionChecked = !newOptionChecked }
                             )
                             val containercolor : Color
@@ -235,6 +256,7 @@ class InputScreen {
                     }
                 }
             }
+
             Button(
                 onClick =
                 {
@@ -268,6 +290,127 @@ class InputScreen {
                     )
                 )
             }
+        }
+    }
+
+    @Composable
+    fun CameraScreenButton(dataManip: DataManipulation, navController: NavController)
+    {
+        var permissionGranted by remember { mutableStateOf(false) }
+        var showDialog by remember { mutableStateOf(0) }
+        var askPermissions by remember { mutableStateOf(false) }
+
+        runBlocking {
+            permissionGranted = (dataManip.getCameraPermission()) // grab permission state
+        }
+
+        val permissionLauncher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestPermission(),
+            onResult = { isGranted ->
+                permissionGranted = isGranted // set result from permission popup
+                if(!permissionGranted)
+                {
+                    if(!ActivityCompat.shouldShowRequestPermissionRationale(dataManip.activity, Manifest.permission.CAMERA)) //if dont allow is clicked or popup refuses to show up anymore
+                    {
+                        showDialog = 2
+                    }
+                    else // if tapped outside or no option is clicked
+                    {
+                        showDialog = 1
+                    }
+                }
+                else
+                {
+                    navController.navigate("CameraScreen") // if allowed
+                    {
+                        popUpTo("InputScreen")
+                    }
+                    CoroutineScope(Dispatchers.IO).launch { dataManip.updateCameraPermission(permissionGranted) }
+                }
+                askPermissions = false
+            }
+        )
+
+        Box(modifier = Modifier
+            .offset(
+                x = ((LocalConfiguration.current.screenWidthDp.dp) - 50.dp),
+                y = (LocalConfiguration.current.screenHeightDp.dp) * .2f
+            )
+            .padding(0.dp)
+        )
+        {
+            Image(
+                painter = painterResource(id = R.drawable.darkmodecameraicon),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(1.dp)
+                    .scale(75f)
+                    .padding(0.dp)
+                    .clickable
+                    {
+                        if (permissionGranted) {
+                            navController.navigate("CameraScreen")
+                            {
+                                popUpTo("InputScreen")
+                            }
+                        } else {
+                            askPermissions = true // if permission wasnt set to always allow
+                        }
+                    }
+            )
+        }
+        if(askPermissions)
+        {
+            permissionLauncher.launch(Manifest.permission.CAMERA) // then request it
+        }
+        if(showDialog == 1)
+        {
+            AlertDialog(
+                onDismissRequest = { },
+                title = { Text("Camera Permission Request", textAlign = TextAlign.Center) },
+                text = { Text("Please grant permission to access your camera to continue.", fontSize = 18.sp) }, //dialog for allowing
+                confirmButton = {
+                    Button(onClick = {
+                        askPermissions = true
+                        showDialog = 0
+                    }) {
+                        Text(text = "Allow")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = {
+                        showDialog = 0
+                        askPermissions = false
+                    }) {
+                        Text("Dismiss")
+                    }
+                }
+            )
+        }
+        else if(showDialog == 2)
+        {
+            AlertDialog(
+                onDismissRequest = { },
+                title = { Text("Access Denied.", textAlign = TextAlign.Center) }, // dialog for sending to settings since dont allow is selected
+                text = { Text("You have set the permission to not allowed. If you would still like to continue, please click the go to settings button and adjust it manually.", fontSize = 18.sp) },
+                confirmButton = {
+                    Button(onClick = {
+                        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                        intent.data = Uri.fromParts("package", dataManip.context.packageName, null)
+                        dataManip.context.startActivity(intent)
+                        showDialog = 0
+                    }) {
+                        Text(text = "Go To Settings")
+                    }
+                },
+                dismissButton = {
+                    Button(onClick = {
+                        showDialog = 0
+                    }) {
+                        Text("Dismiss")
+                    }
+                }
+            )
         }
     }
 }

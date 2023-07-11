@@ -22,42 +22,43 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
-import kotlin.system.exitProcess
 
 class Popups {
 
-    fun navigate(dataManip: DataManipulation, navController: NavController)
+    private fun Navigate(dataManip: DataManipulation, navController: NavController)
     {
-        dataManip.fetchFromFireBase()
+        dataManip.fetchFromFireBase()//Grab data from firebase, then navigate to screen
         {
             navController.navigate("DisplayScreen")
             {
-                popUpTo("Loading")
+                popUpTo("Loading") {
+                    inclusive = true
+                }
             }
         }
     }
     @Composable
-    fun Loading(dataManip: DataManipulation, navController: NavController) {
+    fun Loading(dataManip: DataManipulation, navController: NavController) {//Do Loading Screen while waiting for data
         var label by remember { mutableStateOf("") }
         LaunchedEffect(Unit)
         {
             val votesList = dataManip.getCache()
-            val connectivityManager = dataManip.context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val connectivityManager = dataManip.context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
             if (connectivityManager.activeNetwork != null)
             {
-                navigate(dataManip, navController)
+                Navigate(dataManip, navController)
                 label = "Loading...."
             } else
             {
-                if (votesList.isNullOrEmpty())
+                if (votesList.isNullOrEmpty())  //Checks and safety flow
                 {
                     label = "No internet connection\nor data in cache."
                     delay(5000)
-                    exitProcess(0)
+                    dataManip.activity.finishAffinity()
                 } else
                 {
                     label = "Pulling from cache...."
-                    navigate(dataManip, navController)
+                    Navigate(dataManip, navController)
                 }
             }
         }
