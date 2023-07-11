@@ -8,7 +8,8 @@ more user-friendly.
 
 
 ## **How-To-Guide**
-![](C:\Repos\Favorite_video_game_genres\app\src\main\res\drawable-normal\htg.png)
+
+![htg.png](C:\Repos\Favorite_video_game_genres\app\src\main\res\drawable-normal\htg.png)
 
 Back Arrow : Goes back to the previous screen
 
