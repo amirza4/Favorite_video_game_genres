@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                             },
                             navigationIcon = {
 
-                                if (navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
+                                if (navController.currentBackStackEntry?.destination?.route != "Loading") {
                                     IconButton(onClick = { navController.popBackStack() }) {
                                         Icon(
                                             Icons.Filled.ArrowBack,
@@ -86,7 +86,7 @@ class MainActivity : ComponentActivity() {
                             }
                         )
                         //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
-                        Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(40.dp))
                     }
                 ) {
                     NavHost(navController, startDestination = "Loading") {
