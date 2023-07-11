@@ -48,10 +48,10 @@ class MainActivity : ComponentActivity() {
                         inputScreen.CameraScreenButton(dataManip, navController)
                         overlay.Overlay(dataManip)
                     }
-                }
-                composable("CameraScreen") {
-                    cameraScreen.CameraScreen(dataManip, navController)
-                }
+//                }
+//                composable("CameraScreen") {
+//                    cameraScreen.CameraScreen(dataManip, navController)
+//                }
             }
         }
     }
