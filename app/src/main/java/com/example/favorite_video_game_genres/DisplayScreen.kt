@@ -42,6 +42,21 @@ class DisplayScreen {
         )
         {
             dataManip.retrieveData.forEach { value ->
+            Text(
+                text = "Favorite Video Game Genres",
+                style = TextStyle(
+                    color = dataManip.textLDModeColor,
+                    fontSize = 34.sp,
+                    fontFamily = FontFamily.Cursive,
+                    fontWeight = FontWeight.W900
+                ),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, bottom = 20.dp)
+                    .align(Alignment.CenterHorizontally)
+            )
+            dataManip.retrieveData.forEach { value -> //Create bar graph for each row in the DB
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -56,7 +71,7 @@ class DisplayScreen {
                     )
                     {
                         drawRect(
-                            color = (dataManip.secondaryColor),
+                            color = (dataManip.secondaryColor), // Create bars
                             size = Size(
                                 (size.width - 15.dp.toPx()) * (value.second.toFloat() / dataManip.retrieveData.maxOfOrNull { it.second }!!),
                                 size.height

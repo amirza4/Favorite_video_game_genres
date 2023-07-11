@@ -1,11 +1,17 @@
 package com.example.favorite_video_game_genres
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
-import android.net.ConnectivityManager
+import android.content.pm.PackageManager
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.core.app.ActivityCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
 import com.example.favorite_video_game_genres.ui.theme.DarkColorScheme
 import com.example.favorite_video_game_genres.ui.theme.LightColorScheme
 import com.google.firebase.firestore.FirebaseFirestore
@@ -16,108 +22,105 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-class DataManipulation(contextParam: Context) {
+class DataManipulation(var context: Context, var activity: Activity) {
     var retrieveData = mutableListOf<Pair<String, Int>>()
     var LDmode by mutableStateOf("Light")
     var primaryColor by mutableStateOf(LightColorScheme.primary)
     var secondaryColor by mutableStateOf(LightColorScheme.secondary)
     var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
     var textLDModeColor by mutableStateOf(Color.Black)
-    var fetched by mutableStateOf(false)
-    var context: Context? = contextParam
     val db = FirebaseFirestore.getInstance().collection("game_counts").document("84c8g5rVr8KJliP4108c")
 
     fun fetchFromFireBase(callback: () -> Unit) {
-        if(!fetched)
-        {
-            val cache = DataCaching.createCacheDb(context!!)?.userDao()
-            db.get(Source.SERVER)
-                .addOnSuccessListener { document ->
-                    val data = document.data
-                    CoroutineScope(Dispatchers.Main).launch()
+        val cache = DataCaching.createCacheDb(context) //creating cache object
+        db.get(Source.SERVER)
+            .addOnSuccessListener { document ->
+                val data = document.data
+                CoroutineScope(Dispatchers.Main).launch() // forcing on main thread
+                {
+                    data!!.toSortedMap().forEach { (key, value) ->
+                        retrieveData.add(
+                            Pair(
+                                key,
+                                value.toString().toFloat().toInt()
+                            )
+                        ) // retrieve data from firebase
+                    }
+                    callback() // goes back to where function was called
+                    withContext(Dispatchers.IO) // runs this in the back even though its called back
                     {
-                        data!!.toSortedMap().forEach { (key, value) ->
-                            retrieveData.add(Pair(key, value.toString().toFloat().toInt()))
-                        }
-                        fetched = true
-                        callback()
-                        withContext(Dispatchers.IO)
-                        {
-                            val votesList = cache?.getData()
-                            if(votesList.isNullOrEmpty())
+                        val votesList = cache.userDao().getData()
+                        if (votesList.isNullOrEmpty()) {
+                            retrieveData.forEachIndexed { index, (key, value) -> // writes to cache async
+                                cache.userDao().writeData(
+                                    Votes(
+                                        index,
+                                        key,
+                                        value.toString().toFloat().toInt()
+                                    )
+                                )
+                            }
+                        } else {
+                            if (votesList.size != retrieveData.size) //if mismatch in record sizes
                             {
-                                retrieveData.forEachIndexed { index, (key, value) ->
-                                    cache?.writeData(Votes(index, key, value.toString().toFloat().toInt()))
+                                clearCache()
+                                retrieveData.forEachIndexed { index, (key, value) -> //rewrite
+                                    cache.userDao().writeData(
+                                        Votes(
+                                            index,
+                                            key,
+                                            value.toString().toFloat().toInt()
+                                        )
+                                    )
+                                }
+                            } else {
+                                retrieveData.forEachIndexed { index, (key, value) -> //otherwise just update as normal
+                                    cache.userDao().updateData(
+                                        Votes(
+                                            index,
+                                            key,
+                                            value.toString().toFloat().toInt()
+                                        )
+                                    )
                                 }
                             }
-                            else
-                            {
-                                if(votesList.size != retrieveData.size)
-                                {
-                                    clearCache()
-                                    retrieveData.forEachIndexed { index, (key, value) ->
-                                        cache.writeData(Votes(index, key, value.toString().toFloat().toInt()))
-                                    }
-                                }
-                                else
-                                {
-                                    retrieveData.forEachIndexed { index, (key, value) ->
-                                        cache.updateData(Votes(index, key, value.toString().toFloat().toInt()))
-                                    }
-                                }
-                                DataCaching.closeCacheDb()
-                            }
+                            cache.close()
                         }
                     }
                 }
-                .addOnFailureListener { exception ->
-                    var votesList:List<Votes>? = null
-                    val connectivityManager = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-                    if(connectivityManager.activeNetwork == null)
-                    {
-                        CoroutineScope(Dispatchers.Main).launch()
-                        {
-                            votesList = cache?.getData()
-                            votesList!!.forEach { (_, fields, votes) ->
-                                retrieveData.add(Pair(fields, votes))
-                            }
-                            DataCaching.closeCacheDb()
-                            fetched = true
-                            callback()
-                        }
+            }
+            .addOnFailureListener { _ ->
+                CoroutineScope(Dispatchers.Main).launch() //if firebase down, pull from cache
+                {
+                    val votesList: List<Votes> = cache.userDao().getData()
+                    votesList.forEach { (_, fields, votes) ->
+                        retrieveData.add(Pair(fields, votes))
                     }
-                    else
-                    {
-                        CoroutineScope(Dispatchers.IO).launch() {
-                            votesList!!.forEach { (_, fields, votes) ->
-                                retrieveData.add(Pair(fields, votes))
-                            }
-                            DataCaching.closeCacheDb()
-                            fetched = true
-                        }
-                        callback()
-                    }
+                    cache.close()
+                    callback()
                 }
-        }
+            }
     }
+
+        
 
     fun updateDB(checked: MutableList<Boolean>, callback: () -> Unit)
     {
-        val cache = DataCaching.createCacheDb(context!!)?.userDao()
+        val cache = DataCaching.createCacheDb(context)
         for((i, value) in checked.withIndex())
         {
             if(value)
             {
-                retrieveData[i] = retrieveData[i].copy(second = retrieveData[i].second + 1)
-                db.update(retrieveData[i].first, retrieveData[i].second)
+                retrieveData[i] = retrieveData[i].copy(second = retrieveData[i].second + 1) // cant directly add 1, so add a copy with 1 added to the second property
+                db.update(retrieveData[i].first, retrieveData[i].second) 
             }
         }
-        retrieveData.sortBy { it.first }
+        retrieveData.sortBy { it.first } //sort alphabetically
         CoroutineScope(Dispatchers.IO).launch{
             retrieveData.forEachIndexed{ index, (key, value) ->
-                cache?.updateData(Votes(index, key, value.toString().toFloat().toInt()))
+                cache.userDao().updateData(Votes(index, key, value.toString().toFloat().toInt())) //update cache asynchronously
             }
-            DataCaching.closeCacheDb()
+            cache.close()
         }
 
         callback()
@@ -125,23 +128,23 @@ class DataManipulation(contextParam: Context) {
 
     fun newGenreCheck(check: Boolean, name: String, callback: () -> Unit)
     {
-        if(!check)
+        if(!check) // if new custom checkbox not checked
         {
             callback()
         }
         else
         {
             if(!(name.isNullOrBlank() || retrieveData.any { it.first.lowercase().contains(name.trim().lowercase()) } || name.contains('.')))
-            {
-                val cache = DataCaching.createCacheDb(context!!)?.userDao()
-                val uppercaseOption = name.split(" ").joinToString(" ") { it.replaceFirstChar { it.uppercase() } }
+            { //check if custom option is not blank, doesnt contain each other after lower case and spaces removed, or have periods
+                val cache = DataCaching.createCacheDb(context)
+                val uppercaseOption = name.split(" ").joinToString(" ") { it.replaceFirstChar { it.uppercase() } } //replace each word in string with first letter capital
                 retrieveData.add(Pair(uppercaseOption, 1))
                 CoroutineScope(Dispatchers.IO).launch()
                 {
-                    cache?.writeData(Votes(retrieveData.size - 1, uppercaseOption, 1))
+                    cache.userDao().writeData(Votes(retrieveData.size - 1, uppercaseOption, 1)) // create new record in cache
                 }
                 db.update(uppercaseOption, 1)
-                DataCaching.closeCacheDb()
+                cache.close()
                 callback()
             }
             else
@@ -153,18 +156,18 @@ class DataManipulation(contextParam: Context) {
 
     suspend fun clearCache()
     {
-        val cache = DataCaching.createCacheDb(context!!)?.userDao()
-        val votesList = cache?.getData()
-        votesList?.forEach{ (ID, fields, votes) ->
-            cache.deleteData(Votes(ID, fields, votes))
+        val cache = DataCaching.createCacheDb(context)
+        val votesList = cache.userDao().getData()
+        votesList.forEach{ (ID, fields, votes) ->
+            cache.userDao().deleteData(Votes(ID, fields, votes))
         }
-        DataCaching.closeCacheDb()
+        cache.close()
     }
 
-    suspend fun getCache(): List<Votes>? {
-        val cache = DataCaching.createCacheDb(context!!)?.userDao()
-        val votesList = cache?.getData()
-        DataCaching.closeCacheDb()
+    suspend fun getCache(): List<Votes> {
+        val cache = DataCaching.createCacheDb(context)
+        val votesList = cache.userDao().getData()
+        cache.close()
         return votesList
     }
 
@@ -172,25 +175,23 @@ class DataManipulation(contextParam: Context) {
     {
         var darkMode: Boolean
         runBlocking {
-            val cache = DataCaching.createCacheDb(context!!)?.userDao()
-            val getMode = cache?.getMode()
-            if(getMode == null)
+            val cache = DataCaching.createCacheDb(context)
+            if(cache.userDao().getMode() == null)
             {
-                cache?.createMode(LDMode(0, false))
-                DataCaching.closeCacheDb()
+                cache.userDao().createMode(false)
                 darkMode = false
             }
             else
             {
-                DataCaching.closeCacheDb()
-                darkMode = getMode
-                if (darkMode) {
-                    LDmode = "Dark"
-                    textLDModeColor = Color.White
-                    primaryColor = DarkColorScheme.primary
-                    secondaryColor = DarkColorScheme.secondary
-                    tertiaryColor = DarkColorScheme.tertiary
-                }
+                darkMode = cache.userDao().getMode()
+            }
+            cache.close()
+            if (darkMode) {
+                LDmode = "Dark"
+                textLDModeColor = Color.White
+                primaryColor = DarkColorScheme.primary
+                secondaryColor = DarkColorScheme.secondary
+                tertiaryColor = DarkColorScheme.tertiary
             }
         }
         return darkMode
@@ -198,8 +199,26 @@ class DataManipulation(contextParam: Context) {
 
     suspend fun updateLDMode(isDarkMode: Boolean)
     {
-        val cache = DataCaching.createCacheDb(context!!)?.userDao()
-        cache?.updateMode(LDMode(0, isDarkMode))
-        DataCaching.closeCacheDb()
+        val cache = DataCaching.createCacheDb(context)
+        cache.userDao().updateMode(isDarkMode)
+        cache.close()
+    }
+
+    suspend fun getCameraPermission(): Boolean
+    {
+        val cache = DataCaching.createCacheDb(context)
+        runBlocking {
+            cache.userDao().updateCameraPermission((ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED))
+        }
+        val permission = cache.userDao().getCameraPermission()
+        cache.close()
+        return permission
+    }
+
+    suspend fun updateCameraPermission(cameraPermission: Boolean)
+    {
+        val cache = DataCaching.createCacheDb(context)
+        cache.userDao().updateCameraPermission(cameraPermission)
+        cache.close()
     }
 }
