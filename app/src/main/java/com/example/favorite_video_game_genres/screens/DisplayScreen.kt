@@ -1,4 +1,4 @@
-package com.example.favorite_video_game_genres
+package com.example.favorite_video_game_genres.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.favorite_video_game_genres.data.DataManipulation
 
 class DisplayScreen {
 
@@ -56,7 +57,7 @@ class DisplayScreen {
                     .padding(top = 20.dp, bottom = 20.dp)
                     .align(Alignment.CenterHorizontally)
             )
-            dataManip.retrieveData.forEach { value ->
+            dataManip.retrieveData.forEach { value -> //Create bar graph for each row in the DB
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -71,7 +72,7 @@ class DisplayScreen {
                     )
                     {
                         drawRect(
-                            color = (dataManip.secondaryColor),
+                            color = (dataManip.secondaryColor), // Create bars
                             size = Size(
                                 (size.width - 15.dp.toPx()) * (value.second.toFloat() / dataManip.retrieveData.maxOfOrNull { it.second }!!),
                                 size.height
