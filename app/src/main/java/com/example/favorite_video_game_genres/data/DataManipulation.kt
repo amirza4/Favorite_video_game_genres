@@ -26,9 +26,11 @@ class DataManipulation(var context: Context, var activity: Activity) {
     var secondaryColor by mutableStateOf(LightColorScheme.secondary)
     var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
     var textLDModeColor by mutableStateOf(Color.Black)
+    var imageRotation by mutableStateOf(0)
     val db = FirebaseFirestore.getInstance().collection("game_counts").document("84c8g5rVr8KJliP4108c")
 
     fun fetchFromFireBase(callback: () -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch { imageRotation = getImageRotation() ?: 0}
         val cache = DataCaching.createCacheDb(context) //creating cache object
         db.get(Source.SERVER)
             .addOnSuccessListener { document ->
@@ -219,18 +221,18 @@ class DataManipulation(var context: Context, var activity: Activity) {
         cache.close()
     }
 
-    suspend fun getImageTaken(): Boolean?
+    suspend fun getImageRotation(): Int?
     {
         val cache = DataCaching.createCacheDb(context)
-        val imageTaken = cache.userDao().getImageTaken()
+        val imageRotation = cache.userDao().getImageRotation()
         cache.close()
-        return imageTaken
+        return imageRotation
     }
 
-    suspend fun updateImageTaken(imageTaken: Boolean)
+    suspend fun updateImageRotation(imageRotation: Int)
     {
         val cache = DataCaching.createCacheDb(context)
-        cache.userDao().updateImageTaken(imageTaken)
+        cache.userDao().updateImageRotation(imageRotation)
         cache.close()
     }
 }

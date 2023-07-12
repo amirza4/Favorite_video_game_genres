@@ -24,7 +24,7 @@ data class Setting(
     @PrimaryKey val ID: Int,
     var lDMode: Boolean?,
     var cameraPermission: Boolean?,
-    var imageTaken: Boolean?
+    var imageRotation: Int?
 )
 
 @Dao
@@ -57,14 +57,14 @@ interface UserDao // the sql lite commands linked to specific tables
     @Query("UPDATE Setting SET cameraPermission = :cameraPermission WHERE ID = 0")
     suspend fun updateCameraPermission(cameraPermission: Boolean)
 
-    @Query("SELECT imageTaken FROM Setting where ID = 0")
-    suspend fun getImageTaken(): Boolean?
+    @Query("SELECT imageRotation FROM Setting where ID = 0")
+    suspend fun getImageRotation(): Int?
 
-    @Query("UPDATE Setting SET imageTaken = :imageTaken WHERE ID = 0")
-    suspend fun updateImageTaken(imageTaken: Boolean)
+    @Query("UPDATE Setting SET imageRotation = :imageRotation WHERE ID = 0")
+    suspend fun updateImageRotation(imageRotation: Int)
 }
 
-@Database([Votes::class, Setting::class], version = 2, exportSchema = false)
+@Database([Votes::class, Setting::class], version = 3, exportSchema = false)
 abstract class DataCaching : RoomDatabase() {
     abstract fun userDao(): UserDao
     companion object {

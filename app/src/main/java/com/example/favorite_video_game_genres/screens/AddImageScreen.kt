@@ -8,14 +8,19 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -27,6 +32,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -52,14 +60,47 @@ class AddImageScreen {
             permissionGranted = dataManip.getCameraPermission() ?: false // grab permission state
         }
 
+        Box(Modifier.fillMaxSize().background(dataManip.primaryColor))
+
         Column(modifier = Modifier
             .fillMaxSize()
-            .background(dataManip.primaryColor),
+            .padding(
+                start = LocalConfiguration.current.screenWidthDp.dp *.06f,
+                end = LocalConfiguration.current.screenWidthDp.dp *.06f,
+                top = LocalConfiguration.current.screenHeightDp.dp *.33f,
+                bottom = LocalConfiguration.current.screenHeightDp.dp *.34f
+            )
+            .border(
+                width = 8.dp,
+                color = dataManip.tertiaryColor,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clip(RoundedCornerShape(16.dp))
+            .background(dataManip.secondaryColor),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center)
+        {}
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+               // .background(dataManip.primaryColor)
+                .padding(
+                    start = LocalConfiguration.current.screenWidthDp.dp *.1f,
+                    end = LocalConfiguration.current.screenWidthDp.dp *.1f,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         )
         {
-            Text("Click to add Image.", style = TextStyle(fontSize = 25.sp), color = dataManip.textLDModeColor, modifier = Modifier.padding(bottom = 20.dp))
+            Text(
+                "On this page you can add your favorite video game picture and upload it onto this app!",
+                style = TextStyle(fontSize = 25.sp),
+                color = dataManip.textLDModeColor,
+                modifier = Modifier
+                    .padding(bottom = 20.dp),
+                textAlign = TextAlign.Center
+            )
             Button(onClick = {
                 if (permissionGranted) {
                     navController.navigate("CameraScreen")
@@ -71,6 +112,7 @@ class AddImageScreen {
                 Text("Add Image", color = dataManip.textLDModeColor)
             }
         }
+
 
         val permissionLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),

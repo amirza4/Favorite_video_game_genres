@@ -1,6 +1,7 @@
 package com.example.favorite_video_game_genres.accessories
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -36,6 +37,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 class Overlay {
 
@@ -176,10 +178,7 @@ class Overlay {
     @Composable
     fun CameraScreenButton(dataManip: DataManipulation, navController: NavController)
     {
-        var isImageTaken: Boolean
-        runBlocking {
-            isImageTaken  = dataManip.getImageTaken() ?: false
-        }
+        var isImageTaken: Boolean = File(dataManip.context.filesDir, "image1.jpeg").exists()
         Box(modifier = Modifier
             .offset(
                 x = ((LocalConfiguration.current.screenWidthDp.dp) - 50.dp),

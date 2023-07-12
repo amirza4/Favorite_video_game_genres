@@ -5,6 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.view.OrientationEventListener
+import android.view.Surface.ROTATION_0
+import android.view.Surface.ROTATION_180
+import android.view.Surface.ROTATION_270
+import android.view.Surface.ROTATION_90
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG
@@ -52,7 +57,12 @@ import androidx.camera.core.resolutionselector.ResolutionStrategy.HIGHEST_AVAILA
 import com.example.favorite_video_game_genres.data.DataManipulation
 import com.example.favorite_video_game_genres.activities.MainActivity
 import com.example.favorite_video_game_genres.R
+import com.example.favorite_video_game_genres.accessories.Scaffold
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.util.EventListener
 
 
 class CameraScreen
@@ -97,6 +107,7 @@ class CameraScreen
             {
                 aspectRatioStrategy = RATIO_4_3_FALLBACK_AUTO_STRATEGY
             }
+            var rotation by remember { mutableStateOf(ROTATION_0) }
             val lifecycle = LocalLifecycleOwner.current
             val imageCapture by remember { mutableStateOf(ImageCapture.Builder()
                 .setCaptureMode(CAPTURE_MODE_ZERO_SHUTTER_LAG)
@@ -104,7 +115,29 @@ class CameraScreen
                     .setResolutionStrategy(HIGHEST_AVAILABLE_STRATEGY)
                     .setAspectRatioStrategy(RATIO_16_9_FALLBACK_AUTO_STRATEGY).build())
                 .setJpegQuality(100)
+                .setTargetRotation(rotation)
                 .build()) }
+
+            var orientationEventListener = object: OrientationEventListener(dataManip.context){
+                override fun onOrientationChanged(orientation: Int) {
+                    if(orientation == 0)
+                    {
+                        rotation = ROTATION_180
+                    }
+                    else if(orientation == 90)
+                    {
+                        rotation = ROTATION_90
+                    }
+                    else if(orientation == 180)
+                    {
+                        rotation = ROTATION_180
+                    }
+                    else if(orientation == 270)
+                    {
+                        rotation = ROTATION_270
+                    }
+                }
+            }
 
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter)
             {
@@ -132,7 +165,7 @@ class CameraScreen
                                 cameraSelector,
                                 preview,
                                 imageCapture
-                            ).also { Log.d("Taggy", "Camera is bound.") }
+                            )
                         }, ContextCompat.getMainExecutor(dataManip.context))
                         previewView
                     })
@@ -148,15 +181,15 @@ class CameraScreen
                     backgroundColor = Color.Black
                     imageResource = R.drawable.lightmodecameraicon
                 }
-                val openFileStream = dataManip.context.openFileOutput("image1.jpeg", Context.MODE_PRIVATE)
-                val outputFileOptions = ImageCapture.OutputFileOptions.Builder(openFileStream).build()
+                val openFileStream by remember{ mutableStateOf(dataManip.context.openFileOutput("image1.jpeg", Context.MODE_PRIVATE))}
+                val outputFileOptions by remember { mutableStateOf(ImageCapture.OutputFileOptions.Builder(openFileStream).build()) }
                 FloatingActionButton(
                     onClick = {
                         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(dataManip.context), object: OnImageSavedCallback
                         {
                             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
-                                Log.d("Taggy", "Image Captured")
                                 openFileStream.close()
+                                CoroutineScope(Dispatchers.IO).launch { dataManip.updateImageRotation(rotation) }
                                 navController.navigate("ImageDisplay")
                             }
                             override fun onError(error: ImageCaptureException)
