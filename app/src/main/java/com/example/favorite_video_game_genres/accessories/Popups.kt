@@ -1,4 +1,4 @@
-package com.example.favorite_video_game_genres
+package com.example.favorite_video_game_genres.accessories
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -21,6 +21,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.favorite_video_game_genres.data.DataManipulation
 import kotlinx.coroutines.delay
 
 class Popups {

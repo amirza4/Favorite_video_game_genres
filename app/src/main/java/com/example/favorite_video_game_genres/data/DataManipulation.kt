@@ -1,17 +1,14 @@
-package com.example.favorite_video_game_genres
+package com.example.favorite_video_game_genres.data
 
 import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
 import com.example.favorite_video_game_genres.ui.theme.DarkColorScheme
 import com.example.favorite_video_game_genres.ui.theme.LightColorScheme
 import com.google.firebase.firestore.FirebaseFirestore
@@ -29,9 +26,11 @@ class DataManipulation(var context: Context, var activity: Activity) {
     var secondaryColor by mutableStateOf(LightColorScheme.secondary)
     var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
     var textLDModeColor by mutableStateOf(Color.Black)
+    var imageRotation by mutableStateOf(0)
     val db = FirebaseFirestore.getInstance().collection("game_counts").document("84c8g5rVr8KJliP4108c")
 
     fun fetchFromFireBase(callback: () -> Unit) {
+        CoroutineScope(Dispatchers.IO).launch { imageRotation = getImageRotation() ?: 0}
         val cache = DataCaching.createCacheDb(context) //creating cache object
         db.get(Source.SERVER)
             .addOnSuccessListener { document ->
@@ -204,11 +203,11 @@ class DataManipulation(var context: Context, var activity: Activity) {
         cache.close()
     }
 
-    suspend fun getCameraPermission(): Boolean
+    suspend fun getCameraPermission(): Boolean?
     {
         val cache = DataCaching.createCacheDb(context)
         runBlocking {
-            cache.userDao().updateCameraPermission((ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED))
+            cache.userDao().updateCameraPermission((ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED)) //unnecessary but extra safety hurts no one
         }
         val permission = cache.userDao().getCameraPermission()
         cache.close()
@@ -219,6 +218,21 @@ class DataManipulation(var context: Context, var activity: Activity) {
     {
         val cache = DataCaching.createCacheDb(context)
         cache.userDao().updateCameraPermission(cameraPermission)
+        cache.close()
+    }
+
+    suspend fun getImageRotation(): Int?
+    {
+        val cache = DataCaching.createCacheDb(context)
+        val imageRotation = cache.userDao().getImageRotation()
+        cache.close()
+        return imageRotation
+    }
+
+    suspend fun updateImageRotation(imageRotation: Int)
+    {
+        val cache = DataCaching.createCacheDb(context)
+        cache.userDao().updateImageRotation(imageRotation)
         cache.close()
     }
 }

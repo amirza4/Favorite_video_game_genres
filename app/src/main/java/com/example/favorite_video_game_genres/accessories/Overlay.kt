@@ -1,11 +1,13 @@
-package com.example.favorite_video_game_genres
+package com.example.favorite_video_game_genres.accessories
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.absoluteOffset
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -25,11 +27,15 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.favorite_video_game_genres.data.DataManipulation
+import com.example.favorite_video_game_genres.R
 import com.example.favorite_video_game_genres.ui.theme.DarkColorScheme
 import com.example.favorite_video_game_genres.ui.theme.LightColorScheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 class Overlay {
 
@@ -164,6 +170,40 @@ class Overlay {
                         .size(sunSizeX, sunSizeY)
                 )
             }
+        }
+    }
+
+    @Composable
+    fun CameraScreenButton(dataManip: DataManipulation, navController: NavController)
+    {
+        var isImageTaken: Boolean = File(dataManip.context.filesDir, "image1.jpeg").exists()
+        Box(modifier = Modifier
+            .offset(
+                x = ((LocalConfiguration.current.screenWidthDp.dp) - 50.dp),
+                y = (LocalConfiguration.current.screenHeightDp.dp) * .2f
+            )
+            .padding(0.dp)
+        )
+        {
+            Image(
+                painter = painterResource(id = R.drawable.darkmodecameraicon),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(1.dp)
+                    .scale(75f)
+                    .padding(0.dp)
+                    .clickable
+                    {
+                        if(!isImageTaken)
+                        {
+                            navController.navigate("AddImageScreen")
+                        }
+                        else
+                        {
+                            navController.navigate("ImageDisplay")
+                        }
+                    }
+            )
         }
     }
 }

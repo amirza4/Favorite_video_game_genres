@@ -1,4 +1,4 @@
-package com.example.favorite_video_game_genres
+package com.example.favorite_video_game_genres.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -15,6 +15,10 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
 import androidx.compose.ui.unit.*
 import androidx.navigation.compose.*
+import com.example.favorite_video_game_genres.screens.InputScreen
+import com.example.favorite_video_game_genres.accessories.*
+import com.example.favorite_video_game_genres.data.*
+import com.example.favorite_video_game_genres.screens.*
 
 class MainActivity : ComponentActivity() {
 
@@ -32,24 +36,41 @@ class MainActivity : ComponentActivity() {
             val popups = Popups()
             val cameraScreen = CameraScreen()
             val scaffoldBar = Scaffold()
+            val imageDisplay = ImageDisplay()
+            val addImageScreen = AddImageScreen()
 
             NavHost(navController, startDestination = "Loading") { //Navigate to different screens
                 composable("Loading") {popups.Loading(dataManip, navController)}
                 composable("DisplayScreen") {
                     scaffoldBar.ScaffoldBar(dataManip, navController) {
                         displayScreen.DisplayScreen(dataManip, navController)
+                        overlay.CameraScreenButton(dataManip, navController)
                         overlay.Overlay(dataManip)
                     }
                 }
                 composable("InputScreen") {
                     scaffoldBar.ScaffoldBar(dataManip, navController) {
                         inputScreen.InputScreen(dataManip, navController)
-                        inputScreen.CameraScreenButton(dataManip, navController)
+                        overlay.CameraScreenButton(dataManip, navController)
                         overlay.Overlay(dataManip)
                     }
                 }
                 composable("CameraScreen") {
                     cameraScreen.CameraScreen(dataManip, navController)
+                }
+                composable("ImageDisplay")
+                {
+                    scaffoldBar.ScaffoldBar(dataManip, navController) {
+                        imageDisplay.ImageDisplay(dataManip, navController)
+                        overlay.Overlay(dataManip)
+                    }
+                }
+                composable("AddImageScreen")
+                {
+                    scaffoldBar.ScaffoldBar(dataManip, navController) {
+                        addImageScreen.AddImageScreen(dataManip, navController)
+                        overlay.Overlay(dataManip)
+                    }
                 }
             }
         }

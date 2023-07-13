@@ -1,4 +1,4 @@
-package com.example.favorite_video_game_genres
+package com.example.favorite_video_game_genres.data
 
 import android.content.Context
 import androidx.room.Dao
@@ -23,7 +23,8 @@ data class Votes(
 data class Setting(
     @PrimaryKey val ID: Int,
     var lDMode: Boolean?,
-    var cameraPermission: Boolean?
+    var cameraPermission: Boolean?,
+    var imageRotation: Int?
 )
 
 @Dao
@@ -51,16 +52,19 @@ interface UserDao // the sql lite commands linked to specific tables
     suspend fun updateMode(LDMode: Boolean)
 
     @Query("SELECT cameraPermission FROM Setting WHERE ID = 0")
-    suspend fun getCameraPermission(): Boolean
-
-    @Query("INSERT INTO Setting(ID, cameraPermission) VALUES (0, :cameraPermission)")
-    suspend fun createCameraPermission(cameraPermission: Boolean)
+    suspend fun getCameraPermission(): Boolean?
 
     @Query("UPDATE Setting SET cameraPermission = :cameraPermission WHERE ID = 0")
     suspend fun updateCameraPermission(cameraPermission: Boolean)
+
+    @Query("SELECT imageRotation FROM Setting where ID = 0")
+    suspend fun getImageRotation(): Int?
+
+    @Query("UPDATE Setting SET imageRotation = :imageRotation WHERE ID = 0")
+    suspend fun updateImageRotation(imageRotation: Int)
 }
 
-@Database([Votes::class, Setting::class], version = 2, exportSchema = false)
+@Database([Votes::class, Setting::class], version = 3, exportSchema = false)
 abstract class DataCaching : RoomDatabase() {
     abstract fun userDao(): UserDao
     companion object {

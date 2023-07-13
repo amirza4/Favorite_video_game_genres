@@ -1,6 +1,7 @@
-package com.example.favorite_video_game_genres
+package com.example.favorite_video_game_genres.accessories
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -18,12 +19,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.favorite_video_game_genres.data.DataManipulation
 
 class Scaffold {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun ScaffoldBar(dataManip:DataManipulation, navController: NavController, content: @Composable (PaddingValues) -> Unit)
+    fun ScaffoldBar(dataManip: DataManipulation, navController: NavController, content: @Composable (PaddingValues) -> Unit)
     {
         var barColor: Color
 
@@ -61,8 +63,8 @@ class Scaffold {
                         }
                     }
                 )
-//                //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
-//                Spacer(modifier = Modifier.height(16.dp))
+                //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
+                Spacer(modifier = Modifier.height(16.dp))
             },
             content = {PaddingValues -> content(PaddingValues)}
         )
