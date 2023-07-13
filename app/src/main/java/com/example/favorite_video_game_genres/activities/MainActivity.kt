@@ -84,7 +84,9 @@ class MainActivity : ComponentActivity() {
                     }
                 }
                 composable("WebView") {
-                    webViewPage()
+                    scaffoldBar.ScaffoldBar(dataManip, navController) {
+                        webViewPage()
+                    }
                 }
             }
         }

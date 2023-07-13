@@ -14,16 +14,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.key
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.favorite_video_game_genres.data.DataManipulation
 
 class Scaffold {
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
     @Composable
     fun ScaffoldBar(dataManip: DataManipulation, navController: NavController, content: @Composable (PaddingValues) -> Unit)
     {
@@ -50,13 +53,31 @@ class Scaffold {
                             color = dataManip.textLDModeColor
                         )  // Change Text style for the title
                     },
+                    navigationIcon = {
+                        if(navController.currentBackStackEntryAsState().value?.destination?.route != "DisplayScreen")
+                        {
+                            IconButton(onClick = {
+                                dataManip.activity.onBackPressed()
+                            })
+                            {
+                                Icon(
+                                    Icons.Filled.ArrowBack,
+                                    contentDescription = "Back",
+                                    tint = dataManip.textLDModeColor
+                                )
+                            }
+                        }
+                    },
                     actions = {
-                        IconButton(onClick = { navController.navigate("WebView") }) {
-                            Icon(
-                                Icons.Filled.Info,
-                                contentDescription = "How-To-Guide",
-                                tint = dataManip.textLDModeColor
-                            )
+                        if(navController.currentBackStackEntryAsState().value?.destination?.route != "WebView")
+                        {
+                            IconButton(onClick = { navController.navigate("WebView") }) {
+                                Icon(
+                                    Icons.Filled.Info,
+                                    contentDescription = "How-To-Guide",
+                                    tint = dataManip.textLDModeColor
+                                )
+                            }
                         }
                     }
                 )

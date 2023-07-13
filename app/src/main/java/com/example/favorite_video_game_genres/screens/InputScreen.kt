@@ -28,6 +28,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -53,6 +54,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.favorite_video_game_genres.R
 import com.example.favorite_video_game_genres.data.DataManipulation
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 
 class InputScreen {
 
@@ -293,31 +296,15 @@ class InputScreen {
                 AlertDialog(
                     onDismissRequest = {},
                     title = { Text("Votes Submitted!.", textAlign = TextAlign.Center) },
-                    text = { Text("You have successfully submitted your votes! If you would like to enter more, or return to the home screen, please choose from the following options.", fontSize = 18.sp) },
-                    confirmButton =
-                    {
-                        Button(onClick =
-                    {
-                        navController.navigate("DisplayScreen")
-                        submitted = false
-                    }, modifier = Modifier.fillMaxWidth())
-                        {
-                            Text(
-                                text = "Return to home screen."
-                            )
-                        }
-                    },
-                    dismissButton =
-                    {
-                        Button(onClick =
-                        {
-                            submitted = false
-                        }, modifier = Modifier.fillMaxWidth())
-                        {
-                            Text(text = "Enter more.")
-                        }
-                    }
+                    text = { Text("You have successfully submitted your votes!", fontSize = 18.sp) },
+                    confirmButton = {}
                 )
+                LaunchedEffect(Unit)
+                {
+                    delay(2500)
+                    navController.navigate("DisplayScreen")
+                    submitted = false
+                }
             }
         }
     }
