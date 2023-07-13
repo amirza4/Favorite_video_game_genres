@@ -72,6 +72,9 @@ class MainActivity : ComponentActivity() {
                         overlay.Overlay(dataManip)
                     }
                 }
+                composable("WebView") {
+                    webViewPage()
+                }
             }
         }
     }

@@ -1,10 +1,10 @@
 package com.example.favorite_video_game_genres.accessories
 
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -61,12 +61,19 @@ class Scaffold {
                                 )
                             }
                         }
+                    },
+                    actions = {
+                        IconButton(onClick = { navController.navigate("WebView") }) {
+                            Icon(
+                                Icons.Filled.Info,
+                                contentDescription = "How-To-Guide",
+                                tint = dataManip.textLDModeColor
+                            )
+                        }
                     }
                 )
-                //Spacer needs to be added below the TopAppBar to allow a white space separating the graph from the scaffold
-                Spacer(modifier = Modifier.height(16.dp))
             },
-            content = {PaddingValues -> content(PaddingValues)}
+            content = { paddingValues -> content(paddingValues) }
         )
     }
 }
