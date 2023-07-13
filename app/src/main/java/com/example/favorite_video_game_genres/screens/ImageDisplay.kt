@@ -56,7 +56,7 @@ class ImageDisplay {
                     .rotate(dataManip.imageRotation.toFloat() + 90f)
                     .scale(1.65f))
         }
-        Box(modifier = Modifier.fillMaxSize().padding(bottom = 25.dp), contentAlignment = Alignment.BottomCenter)
+        Box(modifier = Modifier.fillMaxSize().padding(bottom = 0.dp), contentAlignment = Alignment.BottomCenter)
         {
             Button(onClick =
             {
@@ -64,7 +64,7 @@ class ImageDisplay {
             },
                 modifier = Modifier
                     .fillMaxWidth(.7f)
-                    .padding(bottom = 55.dp),
+                    .padding(bottom = 47.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = dataManip.tertiaryColor))
             {
                 Text("Update", style = TextStyle(fontSize = 14.sp), color = dataManip.textLDModeColor)
