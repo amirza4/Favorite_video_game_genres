@@ -176,10 +176,10 @@ class CameraScreen
                     backgroundColor = Color.Black
                     imageResource = R.drawable.lightmodecameraicon
                 }
-                val openFileStream by remember{ mutableStateOf(dataManip.context.openFileOutput("image1.jpeg", Context.MODE_PRIVATE))}
-                val outputFileOptions by remember { mutableStateOf(ImageCapture.OutputFileOptions.Builder(openFileStream).build()) }
                 FloatingActionButton(
                     onClick = {
+                        val openFileStream = dataManip.context.openFileOutput("image1.jpeg", Context.MODE_PRIVATE)
+                        val outputFileOptions = ImageCapture.OutputFileOptions.Builder(openFileStream).build()
                         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(dataManip.context), object: OnImageSavedCallback
                         {
                             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
