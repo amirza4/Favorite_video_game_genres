@@ -50,18 +50,6 @@ class Scaffold {
                             color = dataManip.textLDModeColor
                         )  // Change Text style for the title
                     },
-                    navigationIcon = {
-                        if (navController.currentBackStackEntry?.destination?.route != "DisplayScreen") {
-                            IconButton(onClick = { navController.popBackStack() })
-                            {
-                                Icon(
-                                    Icons.Filled.ArrowBack,
-                                    contentDescription = "Back",
-                                    tint = dataManip.textLDModeColor
-                                )
-                            }
-                        }
-                    },
                     actions = {
                         IconButton(onClick = { navController.navigate("WebView") }) {
                             Icon(

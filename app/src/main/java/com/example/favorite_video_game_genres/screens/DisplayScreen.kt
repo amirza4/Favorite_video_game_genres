@@ -1,6 +1,7 @@
 package com.example.favorite_video_game_genres.screens
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -33,6 +35,9 @@ class DisplayScreen {
     @Composable
     fun DisplayScreen(dataManip: DataManipulation, navController: NavController) {
 
+        BackHandler {
+        }
+
         val state = rememberScrollState()
 
         Column(
@@ -42,6 +47,7 @@ class DisplayScreen {
                 .background(dataManip.primaryColor)
         )
         {
+            Spacer(modifier = Modifier.padding(bottom = 55.dp))
             dataManip.retrieveData.forEach { value -> //Create bar graph for each row in the DB
                 Box(
                     modifier = Modifier
@@ -92,9 +98,6 @@ class DisplayScreen {
                 onClick =
                 {
                     navController.navigate("InputScreen")
-                    {
-                        popUpTo("DisplayScreen")
-                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()

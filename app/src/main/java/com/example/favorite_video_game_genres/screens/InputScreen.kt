@@ -1,6 +1,7 @@
 package com.example.favorite_video_game_genres.screens
 
 import android.annotation.SuppressLint
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -17,6 +18,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -47,6 +49,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.favorite_video_game_genres.R
 import com.example.favorite_video_game_genres.data.DataManipulation
@@ -57,6 +60,16 @@ class InputScreen {
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
     @Composable
     fun InputScreen(dataManip: DataManipulation, navController: NavController) {
+
+        BackHandler {
+            navController.navigate("DisplayScreen")
+            {
+                popUpTo("InputScreen")
+                {
+                    inclusive = true
+                }
+            }
+        }
 
         var checked by remember { mutableStateOf(ArrayList<Boolean>()) }
         var newOptionChecked by remember { mutableStateOf(false) }
@@ -241,17 +254,17 @@ class InputScreen {
                     }
                 }
             }
-
+            var submitted by remember { mutableStateOf(false) }
             Button(
                 onClick =
                 {
-                    dataManip.newGenreCheck(newOptionChecked, newOptionName)
+                    if(checked.any(){ it } || newOptionChecked)
                     {
-                        dataManip.updateDB(checked)
+                        dataManip.newGenreCheck(newOptionChecked, newOptionName)
                         {
-                            navController.navigate("DisplayScreen")
+                            dataManip.updateDB(checked)
                             {
-                                popUpTo("InputScreen")
+                                submitted = true
                             }
                         }
                     }
@@ -273,6 +286,37 @@ class InputScreen {
                         fontSize = 18.sp,
                         fontFamily = FontFamily.SansSerif
                     )
+                )
+            }
+            if(submitted)
+            {
+                AlertDialog(
+                    onDismissRequest = {},
+                    title = { Text("Votes Submitted!.", textAlign = TextAlign.Center) },
+                    text = { Text("You have successfully submitted your votes! If you would like to enter more, or return to the home screen, please choose from the following options.", fontSize = 18.sp) },
+                    confirmButton =
+                    {
+                        Button(onClick =
+                    {
+                        navController.navigate("DisplayScreen")
+                        submitted = false
+                    }, modifier = Modifier.fillMaxWidth())
+                        {
+                            Text(
+                                text = "Return to home screen."
+                            )
+                        }
+                    },
+                    dismissButton =
+                    {
+                        Button(onClick =
+                        {
+                            submitted = false
+                        }, modifier = Modifier.fillMaxWidth())
+                        {
+                            Text(text = "Enter more.")
+                        }
+                    }
                 )
             }
         }

@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -39,12 +40,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.File
 
 class AddImageScreen {
     @SuppressLint("NotConstructor")
     @Composable
     fun AddImageScreen(dataManip: DataManipulation, navController: NavController)
     {
+        BackHandler() {
+            navController.navigate("DisplayScreen")
+        }
+
         var permissionGranted by remember { mutableStateOf(false) }
         var showDialog by remember { mutableStateOf(0) }
         var askPermissions by remember { mutableStateOf(false) }
@@ -97,6 +103,12 @@ class AddImageScreen {
             Button(onClick = {
                 if (permissionGranted) {
                     navController.navigate("CameraScreen")
+                    {
+                        popUpTo("AddImageScreen")
+                        {
+                            inclusive = true
+                        }
+                    }
                 } else {
                     askPermissions = true // if permission wasnt set to allow
                 }

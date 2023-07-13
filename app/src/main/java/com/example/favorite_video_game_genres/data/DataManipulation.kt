@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -18,6 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class DataManipulation(var context: Context, var activity: Activity) {
     var retrieveData = mutableListOf<Pair<String, Int>>()
@@ -234,5 +237,15 @@ class DataManipulation(var context: Context, var activity: Activity) {
         val cache = DataCaching.createCacheDb(context)
         cache.userDao().updateImageRotation(imageRotation)
         cache.close()
+    }
+
+    fun returnImageFile(): File? {
+        var imageFile by mutableStateOf(context.getFileStreamPath("image1.jpeg") )
+        return imageFile
+    }
+
+    fun decodeImage(imageFile: File?): Bitmap? {
+        var imageID by mutableStateOf( BitmapFactory.decodeFile(imageFile?.absolutePath) )
+        return imageID
     }
 }

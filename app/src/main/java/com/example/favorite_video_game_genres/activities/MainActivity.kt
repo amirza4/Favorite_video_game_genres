@@ -60,9 +60,20 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("ImageDisplay")
                 {
-                    scaffoldBar.ScaffoldBar(dataManip, navController) {
-                        imageDisplay.ImageDisplay(dataManip, navController)
-                        overlay.Overlay(dataManip)
+                    val imageID: ImageBitmap? by remember { mutableStateOf(dataManip.decodeImage(dataManip.returnImageFile())?.asImageBitmap()) }
+                    if(imageID != null)
+                    {
+                        scaffoldBar.ScaffoldBar(dataManip, navController) {
+                            imageDisplay.ImageDisplay(dataManip, navController, imageID!!)
+                            overlay.Overlay(dataManip)
+                        }
+                    }
+                    else
+                    {
+                        navController.navigate("DisplayScreen")
+                        {
+                            popUpTo("AddImageScreen")
+                        }
                     }
                 }
                 composable("AddImageScreen")

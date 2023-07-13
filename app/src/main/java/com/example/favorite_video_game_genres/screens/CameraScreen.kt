@@ -9,6 +9,7 @@ import android.view.Surface.ROTATION_0
 import android.view.Surface.ROTATION_180
 import android.view.Surface.ROTATION_270
 import android.view.Surface.ROTATION_90
+import androidx.activity.compose.BackHandler
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_ZERO_SHUTTER_LAG
@@ -66,6 +67,18 @@ class CameraScreen
     @Composable
     fun CameraScreen(dataManip: DataManipulation, navController: NavController)
     {
+        BackHandler() {
+            val isImageTaken: Boolean = dataManip.returnImageFile()?.exists()!!
+            if(isImageTaken)
+            {
+                navController.navigate("ImageDisplay")
+            }
+            else
+            {
+                navController.navigate("AddImageScreen")
+            }
+        }
+        
         var cameraPermissionState by remember { mutableStateOf(false) }
         runBlocking {
             cameraPermissionState = dataManip.getCameraPermission() ?: false
@@ -186,6 +199,12 @@ class CameraScreen
                                 openFileStream.close()
                                 CoroutineScope(Dispatchers.IO).launch { dataManip.updateImageRotation(rotation) }
                                 navController.navigate("ImageDisplay")
+                                {
+                                    popUpTo("CameraScreen")
+                                    {
+                                        inclusive = true
+                                    }
+                                }
                             }
                             override fun onError(error: ImageCaptureException)
                             {
