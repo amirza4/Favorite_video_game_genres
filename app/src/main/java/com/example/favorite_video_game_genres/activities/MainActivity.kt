@@ -1,7 +1,10 @@
 package com.example.favorite_video_game_genres.activities
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,12 +16,14 @@ import androidx.compose.ui.draw.*
 import androidx.compose.ui.geometry.*
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.*
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.*
 import androidx.navigation.compose.*
 import com.example.favorite_video_game_genres.screens.InputScreen
 import com.example.favorite_video_game_genres.accessories.*
 import com.example.favorite_video_game_genres.data.*
 import com.example.favorite_video_game_genres.screens.*
+
 
 class MainActivity : ComponentActivity() {
 
@@ -40,7 +45,7 @@ class MainActivity : ComponentActivity() {
             val addImageScreen = AddImageScreen()
 
             NavHost(navController, startDestination = "Loading") { //Navigate to different screens
-                composable("Loading") {popups.Loading(dataManip, navController)}
+                composable("Loading") { popups.Loading(dataManip, navController) }
                 composable("DisplayScreen") {
                     scaffoldBar.ScaffoldBar(dataManip, navController) {
                         displayScreen.DisplayScreen(dataManip, navController)
@@ -60,16 +65,19 @@ class MainActivity : ComponentActivity() {
                 }
                 composable("ImageDisplay")
                 {
-                    val imageID: ImageBitmap? by remember { mutableStateOf(dataManip.decodeImage(dataManip.returnImageFile())?.asImageBitmap()) }
-                    if(imageID != null)
-                    {
+                    val imageID: ImageBitmap? by remember {
+                        mutableStateOf(
+                            dataManip.decodeImage(
+                                dataManip.returnImageFile()
+                            )?.asImageBitmap()
+                        )
+                    }
+                    if (imageID != null) {
                         scaffoldBar.ScaffoldBar(dataManip, navController) {
                             imageDisplay.ImageDisplay(dataManip, navController, imageID!!)
                             overlay.Overlay(dataManip)
                         }
-                    }
-                    else
-                    {
+                    } else {
                         navController.navigate("DisplayScreen")
                         {
                             popUpTo("AddImageScreen")
@@ -90,5 +98,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+    }
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
     }
 }
