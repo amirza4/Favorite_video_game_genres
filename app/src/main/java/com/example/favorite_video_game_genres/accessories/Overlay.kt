@@ -105,7 +105,7 @@ class Overlay {
             moonSizeX = LocalConfiguration.current.screenWidthDp.dp * .11f
         }
 
-        var isDarkMode by remember { mutableStateOf(dataManip.getLDMode()) }
+        var isDarkMode by remember { mutableStateOf(dataManip.getLDMode()!!) }
         Box(
             modifier = Modifier.fillMaxSize()
                 .absoluteOffset((0).dp, (-100).dp)

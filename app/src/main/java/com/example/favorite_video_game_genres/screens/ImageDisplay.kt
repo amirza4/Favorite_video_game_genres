@@ -1,7 +1,6 @@
 package com.example.favorite_video_game_genres.screens
 
 import android.annotation.SuppressLint
-import android.graphics.BitmapFactory
 import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
@@ -16,27 +15,25 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.favorite_video_game_genres.data.DataManipulation
+import kotlinx.coroutines.runBlocking
 import java.io.File
 
 class ImageDisplay {
     @SuppressLint("NotConstructor")
     @Composable
-    fun ImageDisplay(dataManip: DataManipulation, navController: NavController, imageID: ImageBitmap) {
+    fun ImageDisplay(dataManip: DataManipulation, navController: NavController, imageID: ImageBitmap, imageRotation: Int)
+    {
         BackHandler() {
             dataManip.fetchFromFireBase()
             {
@@ -51,12 +48,21 @@ class ImageDisplay {
             verticalArrangement = Arrangement.Top
         )
         {
+            var rotation: Float = 45f
+            if(imageRotation == 1)
+            {
+                rotation = 90f
+            }
+            else if(imageRotation == 2)
+            {
+                rotation = 0f
+            }
             Image(
                 bitmap = imageID,
                 contentDescription = null,
                 modifier = Modifier
                     .padding(top = (LocalConfiguration.current.screenHeightDp.dp * .33f))
-                    .rotate(dataManip.imageRotation.toFloat() + 90f)
+                    .rotate(rotation)
                     .scale(1.65f))
         }
         Box(modifier = Modifier.fillMaxSize().padding(bottom = 0.dp), contentAlignment = Alignment.BottomCenter)

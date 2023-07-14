@@ -35,7 +35,6 @@ class DataManipulation(var context: Context, var activity: Activity) {
 
     fun fetchFromFireBase(callback: () -> Unit) {
         retrieveData = emptyArray<Pair<String, Int>>().toMutableList()
-        CoroutineScope(Dispatchers.IO).launch { imageRotation = getImageRotation() ?: 0}
         val cache = DataCaching.createCacheDb(context) //creating cache object
         db.get(Source.SERVER)
             .addOnSuccessListener { document ->
@@ -163,22 +162,20 @@ class DataManipulation(var context: Context, var activity: Activity) {
         return votesList
     }
 
-    fun getLDMode(): Boolean
+    suspend fun createSetting(LDMode: Boolean?, CameraPermission: Boolean?, ImageRotation: Int?)
     {
-        var darkMode: Boolean
+        val cache = DataCaching.createCacheDb(context)
+        cache.userDao().createSetting(LDMode, CameraPermission, ImageRotation)
+    }
+
+    fun getLDMode(): Boolean?
+    {
+        var darkMode: Boolean?
         runBlocking {
             val cache = DataCaching.createCacheDb(context)
-            if(cache.userDao().getMode() == null)
-            {
-                cache.userDao().createMode(false)
-                darkMode = false
-            }
-            else
-            {
-                darkMode = cache.userDao().getMode()
-            }
+            darkMode = cache.userDao().getMode()
             cache.close()
-            if (darkMode) {
+            if (darkMode != null && darkMode!!) {
                 LDmode = "Dark"
                 textLDModeColor = Color.White
                 primaryColor = DarkColorScheme.primary

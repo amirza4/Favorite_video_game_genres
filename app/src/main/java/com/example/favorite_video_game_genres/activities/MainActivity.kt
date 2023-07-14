@@ -1,7 +1,6 @@
 package com.example.favorite_video_game_genres.activities
 
 import android.annotation.SuppressLint
-import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -23,17 +22,28 @@ import com.example.favorite_video_game_genres.screens.InputScreen
 import com.example.favorite_video_game_genres.accessories.*
 import com.example.favorite_video_game_genres.data.*
 import com.example.favorite_video_game_genres.screens.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 
 class MainActivity : ComponentActivity() {
 
+    private val dataManip = DataManipulation(this, this)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val dataManip = DataManipulation(this, this)
-
         setContent {
+            val orientationStart = LocalConfiguration.current.orientation
+            runBlocking()
+            {
+                if(dataManip.getImageRotation() == null && dataManip.getLDMode() == null && dataManip.getCameraPermission() == null)
+                {
+                    dataManip.createSetting(false, false, orientationStart)
+                }
+            }
             val navController = rememberNavController()
             val overlay = Overlay()
             val displayScreen = DisplayScreen()
@@ -72,16 +82,15 @@ class MainActivity : ComponentActivity() {
                             )?.asImageBitmap()
                         )
                     }
+                    var imageRotation: Int
+                    runBlocking { imageRotation = dataManip.getImageRotation()!!}
                     if (imageID != null) {
                         scaffoldBar.ScaffoldBar(dataManip, navController) {
-                            imageDisplay.ImageDisplay(dataManip, navController, imageID!!)
+                            imageDisplay.ImageDisplay(dataManip, navController, imageID!!, imageRotation)
                             overlay.Overlay(dataManip)
                         }
                     } else {
                         navController.navigate("DisplayScreen")
-                        {
-                            popUpTo("AddImageScreen")
-                        }
                     }
                 }
                 composable("AddImageScreen")
@@ -101,5 +110,10 @@ class MainActivity : ComponentActivity() {
     }
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
+
+        CoroutineScope(Dispatchers.IO).launch()
+        {
+            dataManip.imageRotation = newConfig.orientation
+        }
     }
 }

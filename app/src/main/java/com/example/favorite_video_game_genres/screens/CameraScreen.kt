@@ -4,11 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.view.OrientationEventListener
-import android.view.Surface.ROTATION_0
-import android.view.Surface.ROTATION_180
-import android.view.Surface.ROTATION_270
-import android.view.Surface.ROTATION_90
 import androidx.activity.compose.BackHandler
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -115,7 +110,6 @@ class CameraScreen
             {
                 aspectRatioStrategy = RATIO_4_3_FALLBACK_AUTO_STRATEGY
             }
-            var rotation by remember { mutableStateOf(ROTATION_0) }
             val lifecycle = LocalLifecycleOwner.current
             val imageCapture by remember { mutableStateOf(ImageCapture.Builder()
                 .setCaptureMode(CAPTURE_MODE_ZERO_SHUTTER_LAG)
@@ -123,29 +117,7 @@ class CameraScreen
                     .setResolutionStrategy(HIGHEST_AVAILABLE_STRATEGY)
                     .setAspectRatioStrategy(RATIO_16_9_FALLBACK_AUTO_STRATEGY).build())
                 .setJpegQuality(100)
-                .setTargetRotation(rotation)
                 .build()) }
-
-            object: OrientationEventListener(dataManip.context){
-                override fun onOrientationChanged(orientation: Int) {
-                    if(orientation == 0)
-                    {
-                        rotation = ROTATION_180
-                    }
-                    else if(orientation == 90)
-                    {
-                        rotation = ROTATION_90
-                    }
-                    else if(orientation == 180)
-                    {
-                        rotation = ROTATION_180
-                    }
-                    else if(orientation == 270)
-                    {
-                        rotation = ROTATION_270
-                    }
-                }
-            }
 
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter)
             {
@@ -196,8 +168,15 @@ class CameraScreen
                         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(dataManip.context), object: OnImageSavedCallback
                         {
                             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                                runBlocking()
+                                {
+                                    if(dataManip.imageRotation != 0)
+                                    {
+                                        dataManip.updateImageRotation(dataManip.imageRotation)
+                                    }
+                                    Log.d("Taggy", dataManip.getImageRotation().toString())
+                                }
                                 openFileStream.close()
-                                CoroutineScope(Dispatchers.IO).launch { dataManip.updateImageRotation(rotation) }
                                 navController.navigate("ImageDisplay")
                                 {
                                     popUpTo("CameraScreen")

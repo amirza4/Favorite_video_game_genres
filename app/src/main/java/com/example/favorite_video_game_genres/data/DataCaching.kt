@@ -43,10 +43,10 @@ interface UserDao // the sql lite commands linked to specific tables
     suspend fun deleteData(Votes: Votes)
 
     @Query("SELECT lDmode FROM Setting WHERE ID=0")
-    suspend fun getMode(): Boolean
+    suspend fun getMode(): Boolean?
 
-    @Query("INSERT INTO Setting (ID, lDMode) Values (0, :LDMode)")
-    suspend fun createMode(LDMode: Boolean)
+    @Query("INSERT INTO Setting (ID, lDMode, cameraPermission, imageRotation) Values (0, :LDMode, :CameraPermission, :ImageRotation)")
+    suspend fun createSetting(LDMode: Boolean?, CameraPermission: Boolean?, ImageRotation: Int?)
 
     @Query("UPDATE Setting SET lDMode = :LDMode WHERE ID = 0")
     suspend fun updateMode(LDMode: Boolean)
@@ -64,7 +64,7 @@ interface UserDao // the sql lite commands linked to specific tables
     suspend fun updateImageRotation(imageRotation: Int)
 }
 
-@Database([Votes::class, Setting::class], version = 3, exportSchema = false)
+@Database([Votes::class, Setting::class], version = 5, exportSchema = false)
 abstract class DataCaching : RoomDatabase() {
     abstract fun userDao(): UserDao
     companion object {

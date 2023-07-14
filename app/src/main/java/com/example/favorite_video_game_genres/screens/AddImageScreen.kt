@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -140,7 +141,7 @@ class AddImageScreen {
                 else
                 {
 
-                    CoroutineScope(Dispatchers.IO).launch { dataManip.updateCameraPermission(permissionGranted) }
+                    runBlocking { dataManip.updateCameraPermission(permissionGranted) }
                     navController.navigate("CameraScreen") // if allowed
                 }
                 askPermissions = false
