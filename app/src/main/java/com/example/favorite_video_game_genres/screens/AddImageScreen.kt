@@ -48,7 +48,10 @@ class AddImageScreen {
     fun AddImageScreen(dataManip: DataManipulation, navController: NavController)
     {
         BackHandler() {
-            navController.navigate("DisplayScreen")
+            dataManip.fetchFromFireBase()
+            {
+                navController.navigate("DisplayScreen")
+            }
         }
 
         var permissionGranted by remember { mutableStateOf(false) }

@@ -54,7 +54,10 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 import com.example.favorite_video_game_genres.R
 import com.example.favorite_video_game_genres.data.DataManipulation
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class InputScreen {
@@ -65,11 +68,14 @@ class InputScreen {
     fun InputScreen(dataManip: DataManipulation, navController: NavController) {
 
         BackHandler {
-            navController.navigate("DisplayScreen")
+            dataManip.fetchFromFireBase()
             {
-                popUpTo("InputScreen")
+                navController.navigate("DisplayScreen")
                 {
-                    inclusive = true
+                    popUpTo("InputScreen")
+                    {
+                        inclusive = true
+                    }
                 }
             }
         }
@@ -295,15 +301,27 @@ class InputScreen {
             {
                 AlertDialog(
                     onDismissRequest = {},
-                    title = { Text("Votes Submitted!.", textAlign = TextAlign.Center) },
+                    title = { Text("Votes Submitted!", textAlign = TextAlign.Center) },
                     text = { Text("You have successfully submitted your votes!", fontSize = 18.sp) },
                     confirmButton = {}
                 )
                 LaunchedEffect(Unit)
                 {
-                    delay(2500)
-                    navController.navigate("DisplayScreen")
-                    submitted = false
+                    dataManip.fetchFromFireBase()
+                    {
+                        runBlocking()
+                        {
+                            delay(2000)
+                            navController.navigate("DisplayScreen")
+                            {
+                                popUpTo("InputScreen")
+                                {
+                                    inclusive = true
+                                }
+                            }
+                            submitted = false
+                        }
+                    }
                 }
             }
         }

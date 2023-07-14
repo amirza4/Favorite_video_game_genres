@@ -38,7 +38,10 @@ class ImageDisplay {
     @Composable
     fun ImageDisplay(dataManip: DataManipulation, navController: NavController, imageID: ImageBitmap) {
         BackHandler() {
-            navController.navigate("DisplayScreen")
+            dataManip.fetchFromFireBase()
+            {
+                navController.navigate("DisplayScreen")
+            }
         }
 
         Column(modifier = Modifier
