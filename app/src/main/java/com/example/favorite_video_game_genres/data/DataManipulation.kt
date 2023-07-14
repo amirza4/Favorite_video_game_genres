@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -33,6 +34,7 @@ class DataManipulation(var context: Context, var activity: Activity) {
     val db = FirebaseFirestore.getInstance().collection("game_counts").document("84c8g5rVr8KJliP4108c")
 
     fun fetchFromFireBase(callback: () -> Unit) {
+        retrieveData = emptyArray<Pair<String, Int>>().toMutableList()
         CoroutineScope(Dispatchers.IO).launch { imageRotation = getImageRotation() ?: 0}
         val cache = DataCaching.createCacheDb(context) //creating cache object
         db.get(Source.SERVER)
@@ -52,8 +54,10 @@ class DataManipulation(var context: Context, var activity: Activity) {
                     withContext(Dispatchers.IO) // runs this in the back even though its called back
                     {
                         val votesList = cache.userDao().getData()
-                        if (votesList.isNullOrEmpty()) {
-                            retrieveData.forEachIndexed { index, (key, value) -> // writes to cache async
+                        if (votesList.isNullOrEmpty() || votesList.size != retrieveData.size) //if mismatch in record sizes
+                        {
+                            clearCache()
+                            retrieveData.forEachIndexed { index, (key, value) -> //rewrite
                                 cache.userDao().writeData(
                                     Votes(
                                         index,
@@ -63,28 +67,14 @@ class DataManipulation(var context: Context, var activity: Activity) {
                                 )
                             }
                         } else {
-                            if (votesList.size != retrieveData.size) //if mismatch in record sizes
-                            {
-                                clearCache()
-                                retrieveData.forEachIndexed { index, (key, value) -> //rewrite
-                                    cache.userDao().writeData(
-                                        Votes(
-                                            index,
-                                            key,
-                                            value.toString().toFloat().toInt()
-                                        )
+                            retrieveData.forEachIndexed { index, (key, value) -> //otherwise just update as normal
+                                cache.userDao().updateData(
+                                    Votes(
+                                        index,
+                                        key,
+                                        value.toString().toFloat().toInt()
                                     )
-                                }
-                            } else {
-                                retrieveData.forEachIndexed { index, (key, value) -> //otherwise just update as normal
-                                    cache.userDao().updateData(
-                                        Votes(
-                                            index,
-                                            key,
-                                            value.toString().toFloat().toInt()
-                                        )
-                                    )
-                                }
+                                )
                             }
                             cache.close()
                         }
