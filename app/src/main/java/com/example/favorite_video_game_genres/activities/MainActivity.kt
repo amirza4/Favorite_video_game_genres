@@ -82,10 +82,10 @@ class MainActivity : ComponentActivity() {
                             )?.asImageBitmap()
                         )
                     }
-                    var imageRotation: Int
-                    runBlocking { imageRotation = dataManip.getImageRotation()!!}
                     if (imageID != null) {
                         scaffoldBar.ScaffoldBar(dataManip, navController) {
+                            var imageRotation: Int
+                            runBlocking { imageRotation = dataManip.getImageRotation()!!}
                             imageDisplay.ImageDisplay(dataManip, navController, imageID!!, imageRotation)
                             overlay.Overlay(dataManip)
                         }

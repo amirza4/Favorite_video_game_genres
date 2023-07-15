@@ -80,7 +80,6 @@ class ImageDisplay {
             }
             Button(onClick =
             {
-                Log.d("Taggy", File(dataManip.context.filesDir, "image1.jpeg").exists().toString())
                 navController.navigate("AddImageScreen")
                 {
                     popUpTo("ImageDisplay")

@@ -174,7 +174,6 @@ class CameraScreen
                                     {
                                         dataManip.updateImageRotation(dataManip.imageRotation)
                                     }
-                                    Log.d("Taggy", dataManip.getImageRotation().toString())
                                 }
                                 openFileStream.close()
                                 navController.navigate("ImageDisplay")
