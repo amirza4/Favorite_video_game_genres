@@ -5,6 +5,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -263,7 +264,7 @@ class InputScreen {
                     }
                 }
             }
-            var submitted by remember { mutableStateOf(false) }
+            var submitted by remember { mutableStateOf(0) }
             Button(
                 onClick =
                 {
@@ -273,9 +274,13 @@ class InputScreen {
                         {
                             dataManip.updateDB(checked)
                             {
-                                submitted = true
+                                submitted = 2
                             }
                         }
+                    }
+                    else
+                    {
+                        submitted = 1
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -297,12 +302,24 @@ class InputScreen {
                     )
                 )
             }
-            if(submitted)
+            var barColor: Color
+
+            if(dataManip.LDmode == "Light")
+            {
+                barColor = Color.White
+            }
+            else
+            {
+                barColor = Color.Black
+            }
+
+            if(submitted == 2)
             {
                 AlertDialog(
                     onDismissRequest = {},
-                    title = { Text("Votes Submitted!", textAlign = TextAlign.Center) },
-                    text = { Text("You have successfully submitted your votes!", fontSize = 18.sp) },
+                    containerColor = barColor,
+                    title = { Text("Votes Submitted!", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
+                    text = { Text("You have successfully submitted your votes!", fontSize = 18.sp, color = dataManip.textLDModeColor) },
                     confirmButton = {}
                 )
                 LaunchedEffect(Unit)
@@ -319,10 +336,30 @@ class InputScreen {
                                     inclusive = true
                                 }
                             }
-                            submitted = false
+                            submitted = 0
                         }
                     }
                 }
+            }
+            else if(submitted == 1)
+            {
+                AlertDialog(
+                    onDismissRequest ={},
+                    containerColor = barColor,
+                    title = { Text("Error: No Checkboxes Selected", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
+                    text = { Text("You have not selected any votes to submit. To vote, please check the checkboxes of your favorite video game genres, or to return, click the back arrow on the top right to return to the display votes screen.", color = dataManip.textLDModeColor) },
+                    confirmButton = {
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
+                        {
+                            Button(onClick = {
+                                submitted = 0
+                            })
+                            {
+                                Text(text = "I Understand", textAlign = TextAlign.Center)
+                            }
+                        }
+                    },
+                )
             }
         }
     }

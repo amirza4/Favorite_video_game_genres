@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.AlertDialog
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Text
@@ -51,10 +51,6 @@ import androidx.camera.core.resolutionselector.ResolutionStrategy.HIGHEST_AVAILA
 import com.example.favorite_video_game_genres.data.DataManipulation
 import com.example.favorite_video_game_genres.activities.MainActivity
 import com.example.favorite_video_game_genres.R
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-
 
 class CameraScreen
 {
@@ -80,9 +76,20 @@ class CameraScreen
         }
         if(!cameraPermissionState) // if camera permission changes to deny at any point, restart or exit app
         {
+            var barColor: Color
+
+            if(dataManip.LDmode == "Light")
+            {
+                barColor = Color.White
+            }
+            else
+            {
+                barColor = Color.Black
+            }
             AlertDialog(onDismissRequest = {},
-                title = {Text("Settings changed.", fontSize = 24.sp, fontWeight = FontWeight.Bold)},
-                text = { Text("There has been a detection of changed settings. You may choose to either exit or restart this app.") },
+                containerColor = barColor,
+                title = {Text("Settings changed.", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = dataManip.textLDModeColor)},
+                text = { Text("There has been a detection of changed settings. You may choose to either exit or restart this app.", color = dataManip.textLDModeColor) },
                 confirmButton = {
                     Button(onClick = {
                         val intent = Intent(dataManip.context, MainActivity::class.java)

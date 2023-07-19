@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -153,12 +154,24 @@ class AddImageScreen {
             permissionLauncher.launch(Manifest.permission.CAMERA) // then request it
         }
 
+        var barColor: Color
+
+        if(dataManip.LDmode == "Light")
+        {
+            barColor = Color.White
+        }
+        else
+        {
+            barColor = Color.Black
+        }
+
         if(showDialog == 1)
         {
             AlertDialog(
                 onDismissRequest = { },
-                title = { Text("Camera Permission Request", textAlign = TextAlign.Center) },
-                text = { Text("Please grant permission to access your camera to continue.", fontSize = 18.sp) }, //dialog for allowing
+                containerColor = barColor,
+                title = { Text("Camera Permission Request", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
+                text = { Text("Please grant permission to access your camera to continue.", fontSize = 18.sp, color = dataManip.textLDModeColor) }, //dialog for allowing
                 confirmButton = {
                     Button(onClick = {
                         askPermissions = true
@@ -181,8 +194,9 @@ class AddImageScreen {
         {
             AlertDialog(
                 onDismissRequest = { },
-                title = { Text("Access Denied.", textAlign = TextAlign.Center) }, // dialog for sending to settings since dont allow is selected
-                text = { Text("You have set the permission to not allowed. If you would still like to continue, please click the go to settings button and adjust it manually.", fontSize = 18.sp) },
+                containerColor = barColor,
+                title = { Text("Access Denied.", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) }, // dialog for sending to settings since dont allow is selected
+                text = { Text("You have set the permission to not allowed. If you would still like to continue, please click the go to settings button and adjust it manually.", fontSize = 18.sp, color = dataManip.textLDModeColor) },
                 confirmButton = {
                     Button(onClick = {
                         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
