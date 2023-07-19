@@ -270,12 +270,19 @@ class InputScreen {
                 {
                     if(checked.any(){ it } || newOptionChecked)
                     {
-                        dataManip.newGenreCheck(newOptionChecked, newOptionName)
+                        if(newOptionName.isNotBlank())
                         {
-                            dataManip.updateDB(checked)
+                            dataManip.newGenreCheck(newOptionChecked, newOptionName)
                             {
-                                submitted = 2
+                                dataManip.updateDB(checked)
+                                {
+                                    submitted = 2
+                                }
                             }
+                        }
+                        else
+                        {
+                            submitted = 3
                         }
                     }
                     else
@@ -359,6 +366,26 @@ class InputScreen {
                             }
                         }
                     },
+                )
+            }
+            else if(submitted == 3)
+            {
+                AlertDialog(
+                    onDismissRequest = {},
+                    containerColor = barColor,
+                    title = { Text("Error: No Text Input For Custom Checkbox", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
+                    text = { Text("You have not entered any text for the custom genre option. To add it, please type your custom favorite video game genre.", color = dataManip.textLDModeColor) },
+                    confirmButton = {
+                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
+                        {
+                            Button(onClick = {
+                                submitted = 0
+                            })
+                            {
+                                Text(text = "Understood", textAlign = TextAlign.Center)
+                            }
+                        }
+                    }
                 )
             }
         }
