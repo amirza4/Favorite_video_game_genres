@@ -88,7 +88,6 @@ class AddImageScreen {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-               // .background(dataManip.primaryColor)
                 .padding(
                     start = LocalConfiguration.current.screenWidthDp.dp *.1f,
                     end = LocalConfiguration.current.screenWidthDp.dp *.1f,
