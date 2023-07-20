@@ -1,6 +1,7 @@
 package com.example.favorite_video_game_genres.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -31,7 +32,8 @@ import kotlinx.coroutines.runBlocking
 class MainActivity : ComponentActivity() {
 
     private val dataManip = DataManipulation(this, this)
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    private var hasPaused = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -39,9 +41,10 @@ class MainActivity : ComponentActivity() {
             val orientationStart = LocalConfiguration.current.orientation
             runBlocking()
             {
+                dataManip.imageRotation = orientationStart
                 if(dataManip.getImageRotation() == null && dataManip.getLDMode() == null && dataManip.getCameraPermission() == null)
                 {
-                    dataManip.createSetting(false, false, orientationStart)
+                    dataManip.createSetting(false, false, dataManip.imageRotation)
                 }
             }
             val navController = rememberNavController()
@@ -108,6 +111,24 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        hasPaused = true
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(hasPaused)
+        {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK and Intent.FLAG_ACTIVITY_NEW_TASK)
+            this.finishAffinity()
+            this.startActivity(intent)
+            hasPaused = false
+        }
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
 
