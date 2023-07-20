@@ -121,6 +121,7 @@ class Overlay {
                         CoroutineScope(Dispatchers.IO).launch { dataManip.updateLDMode(true) }
                         dataManip.LDmode = "Dark"
                         dataManip.textLDModeColor = Color.White
+                        dataManip.bgColor = Color.Black
                         dataManip.primaryColor = DarkColorScheme.primary
                         dataManip.secondaryColor = DarkColorScheme.secondary
                         dataManip.tertiaryColor = DarkColorScheme.tertiary
@@ -128,6 +129,7 @@ class Overlay {
                         CoroutineScope(Dispatchers.IO).launch { dataManip.updateLDMode(false) }
                         dataManip.LDmode = "Light"
                         dataManip.textLDModeColor = Color.Black
+                        dataManip.bgColor = Color.White
                         dataManip.primaryColor = LightColorScheme.primary
                         dataManip.secondaryColor = LightColorScheme.secondary
                         dataManip.tertiaryColor = LightColorScheme.tertiary

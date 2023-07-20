@@ -30,6 +30,7 @@ class DataManipulation(var context: Context, var activity: Activity) {
     var secondaryColor by mutableStateOf(LightColorScheme.secondary)
     var tertiaryColor by mutableStateOf(LightColorScheme.tertiary)
     var textLDModeColor by mutableStateOf(Color.Black)
+    var bgColor by mutableStateOf(Color.White)
     var imageRotation by mutableStateOf(0)
     val db = FirebaseFirestore.getInstance().collection("game_counts").document("84c8g5rVr8KJliP4108c")
 

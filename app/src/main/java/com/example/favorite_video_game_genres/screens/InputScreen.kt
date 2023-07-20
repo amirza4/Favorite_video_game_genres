@@ -309,22 +309,12 @@ class InputScreen {
                     )
                 )
             }
-            var barColor: Color
-
-            if(dataManip.LDmode == "Light")
-            {
-                barColor = Color.White
-            }
-            else
-            {
-                barColor = Color.Black
-            }
 
             if(submitted == 2)
             {
                 AlertDialog(
                     onDismissRequest = {},
-                    containerColor = barColor,
+                    containerColor = dataManip.bgColor,
                     title = { Text("Votes Submitted!", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
                     text = { Text("You have successfully submitted your votes!", fontSize = 18.sp, color = dataManip.textLDModeColor) },
                     confirmButton = {}
@@ -352,7 +342,7 @@ class InputScreen {
             {
                 AlertDialog(
                     onDismissRequest ={},
-                    containerColor = barColor,
+                    containerColor = dataManip.bgColor,
                     title = { Text("Error: No Checkboxes Selected", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
                     text = { Text("You have not selected any votes to submit. To vote, please check the checkboxes of your favorite video game genres, or to return, click the back arrow on the top right to return to the display votes screen.", color = dataManip.textLDModeColor) },
                     confirmButton = {
@@ -372,7 +362,7 @@ class InputScreen {
             {
                 AlertDialog(
                     onDismissRequest = {},
-                    containerColor = barColor,
+                    containerColor = dataManip.bgColor,
                     title = { Text("Error: No Text Input For Custom Checkbox", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
                     text = { Text("You have not entered any text for the custom genre option. To add it, please type your custom favorite video game genre.", color = dataManip.textLDModeColor) },
                     confirmButton = {

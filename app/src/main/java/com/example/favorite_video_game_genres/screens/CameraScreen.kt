@@ -76,18 +76,8 @@ class CameraScreen
         }
         if(!cameraPermissionState) // if camera permission changes to deny at any point, restart or exit app
         {
-            var barColor: Color
-
-            if(dataManip.LDmode == "Light")
-            {
-                barColor = Color.White
-            }
-            else
-            {
-                barColor = Color.Black
-            }
             AlertDialog(onDismissRequest = {},
-                containerColor = barColor,
+                containerColor = dataManip.bgColor,
                 title = {Text("Settings changed.", fontSize = 24.sp, fontWeight = FontWeight.Bold, color = dataManip.textLDModeColor)},
                 text = { Text("There has been a detection of changed settings. You may choose to either exit or restart this app.", color = dataManip.textLDModeColor) },
                 confirmButton = {

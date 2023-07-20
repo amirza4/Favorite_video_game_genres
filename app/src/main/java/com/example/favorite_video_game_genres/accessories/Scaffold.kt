@@ -30,21 +30,11 @@ class Scaffold {
     @Composable
     fun ScaffoldBar(dataManip: DataManipulation, navController: NavController, content: @Composable (PaddingValues) -> Unit)
     {
-        var barColor: Color
-
-        if(dataManip.LDmode == "Light")
-        {
-            barColor = Color.White
-        }
-        else
-        {
-            barColor = Color.Black
-        }
         Scaffold(
             topBar = {
                 TopAppBar(
                     modifier = Modifier.height(40.dp), // Height of AppBar
-                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = barColor),
+                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = dataManip.bgColor),
                     title = {
                         Text(
                             "Favorite Video Game Genre",

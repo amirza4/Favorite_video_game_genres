@@ -154,22 +154,11 @@ class AddImageScreen {
             permissionLauncher.launch(Manifest.permission.CAMERA) // then request it
         }
 
-        var barColor: Color
-
-        if(dataManip.LDmode == "Light")
-        {
-            barColor = Color.White
-        }
-        else
-        {
-            barColor = Color.Black
-        }
-
         if(showDialog == 1)
         {
             AlertDialog(
                 onDismissRequest = { },
-                containerColor = barColor,
+                containerColor = dataManip.bgColor,
                 title = { Text("Camera Permission Request", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
                 text = { Text("Please grant permission to access your camera to continue.", fontSize = 18.sp, color = dataManip.textLDModeColor) }, //dialog for allowing
                 confirmButton = {
@@ -194,7 +183,7 @@ class AddImageScreen {
         {
             AlertDialog(
                 onDismissRequest = { },
-                containerColor = barColor,
+                containerColor = dataManip.bgColor,
                 title = { Text("Access Denied.", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) }, // dialog for sending to settings since dont allow is selected
                 text = { Text("You have set the permission to not allowed. If you would still like to continue, please click the go to settings button and adjust it manually.", fontSize = 18.sp, color = dataManip.textLDModeColor) },
                 confirmButton = {
