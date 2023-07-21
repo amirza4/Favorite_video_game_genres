@@ -15,17 +15,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-val DarkColorScheme = darkColorScheme(
-    primary = DarkestOrange,
-    secondary = LightestOrange ,
-    tertiary = MidOrange
-)
-
 //the three colors for our compliance
 // #DB864E
 // #DC6B2F
 // #E35205
 
+val DarkColorScheme = darkColorScheme(
+    primary = DarkestOrange,
+    secondary = LightestOrange,
+    tertiary = MidOrange
+)
 val LightColorScheme = lightColorScheme(
     primary = LightestOrange,
     secondary = MidOrange,

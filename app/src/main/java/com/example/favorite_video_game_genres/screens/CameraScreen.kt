@@ -167,9 +167,9 @@ class CameraScreen
                             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                                 runBlocking()
                                 {
-                                    if(dataManip.imageRotation != 0)
+                                    if(dataManip.deviceRotation != 0)
                                     {
-                                        dataManip.updateImageRotation(dataManip.imageRotation)
+                                        dataManip.updateImageRotation(dataManip.deviceRotation)
                                     }
                                 }
                                 openFileStream.close()

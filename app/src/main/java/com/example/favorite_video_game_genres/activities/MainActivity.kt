@@ -41,10 +41,10 @@ class MainActivity : ComponentActivity() {
             val orientationStart = LocalConfiguration.current.orientation
             runBlocking()
             {
-                dataManip.imageRotation = orientationStart
+                dataManip.deviceRotation = orientationStart
                 if(dataManip.getImageRotation() == null && dataManip.getLDMode() == null && dataManip.getCameraPermission() == null)
                 {
-                    dataManip.createSetting(false, false, dataManip.imageRotation)
+                    dataManip.createSetting(false, false, dataManip.deviceRotation)
                 }
             }
             val navController = rememberNavController()
@@ -134,7 +134,7 @@ class MainActivity : ComponentActivity() {
 
         CoroutineScope(Dispatchers.IO).launch()
         {
-            dataManip.imageRotation = newConfig.orientation
+            dataManip.deviceRotation = newConfig.orientation
         }
     }
 }
