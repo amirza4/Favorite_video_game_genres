@@ -2,6 +2,7 @@ package com.example.favorite_video_game_genres.screens
 
 import android.annotation.SuppressLint
 import android.view.ViewGroup
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.compose.BackHandler
@@ -24,6 +25,7 @@ fun webViewPage(modifier: Modifier = Modifier,  urlToRender: String = "https://r
                 )
                 webViewClient = WebViewClient()
                 settings.javaScriptEnabled = true
+                settings.cacheMode = WebSettings.LOAD_CACHE_ELSE_NETWORK
                 loadUrl(urlToRender)
             }
         },
