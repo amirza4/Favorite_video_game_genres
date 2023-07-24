@@ -56,7 +56,6 @@ class DisplayScreen {
                 )
                 {
                     Canvas(
-
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(start = 125.dp)

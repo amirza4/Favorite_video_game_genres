@@ -2,7 +2,9 @@ package com.example.favorite_video_game_genres.accessories
 
 import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,6 +15,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
@@ -23,6 +27,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -56,7 +61,9 @@ class Overlay {
             contentAlignment = Alignment.BottomEnd
         )
         {
-            Box(contentAlignment = Alignment.BottomEnd, modifier = Modifier.padding(end = 25.dp, bottom = 50.dp).scale(1.2f))
+            Box(contentAlignment = Alignment.BottomEnd, modifier = Modifier
+                .padding(end = 25.dp, bottom = 50.dp)
+                .scale(1.2f))
             {
                 Switch(
                     checked = isDarkMode,
@@ -111,13 +118,17 @@ class Overlay {
                     Image(
                         painter = painterResource(id = R.drawable.moon1),
                         contentDescription = null,
-                        modifier = Modifier.size(17.dp, 17.dp).offset((-30).dp, (-15.5).dp)
+                        modifier = Modifier
+                            .size(17.dp, 17.dp)
+                            .offset((-30).dp, (-15.5).dp)
                     )
                 } else {
                     Image(
                         painter = painterResource(id = R.drawable.sun1),
                         contentDescription = null,
-                        modifier = Modifier.size(20.dp, 20.dp).offset((-6).dp, (-14).dp)
+                        modifier = Modifier
+                            .size(20.dp, 20.dp)
+                            .offset((-6).dp, (-14).dp)
                     )
                 }
             }
@@ -134,29 +145,41 @@ class Overlay {
             dataManip.returnImageFile()?.delete()
         }
         Box(modifier = Modifier
-            .offset(
-                x = ((LocalConfiguration.current.screenWidthDp.dp) - 50.dp),
-                y = (LocalConfiguration.current.screenHeightDp.dp) * .2f
-            )
-            .padding(0.dp)
+            .fillMaxSize(),
+            contentAlignment = Alignment.TopEnd
         )
         {
-            Image(
-                painter = painterResource(id = R.drawable.darkmodecameraicon),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(1.dp)
-                    .scale(75f)
-                    .padding(0.dp)
-                    .clickable
-                    {
-                        if (!isImageTaken) {
-                            navController.navigate("AddImageScreen")
-                        } else {
-                            navController.navigate("ImageDisplay")
-                        }
-                    }
+            Box(modifier = Modifier
+                .padding(top = 75.dp, end = 15.dp)
+                .clip(CircleShape)
+                .background(dataManip.textLDModeColor)
             )
+            {
+                var cameraIcon: Int
+                if(dataManip.LDmode == "Dark")
+                {
+                    cameraIcon = R.drawable.darkmodecameraicon
+                }
+                else
+                {
+                    cameraIcon = R.drawable.lightmodecameraicon
+                }
+                Image(
+                    painter = painterResource(id = cameraIcon),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(75.dp)
+                        .padding(0.dp)
+                        .clickable
+                        {
+                            if (!isImageTaken) {
+                                navController.navigate("AddImageScreen")
+                            } else {
+                                navController.navigate("ImageDisplay")
+                            }
+                        }
+                )
+            }
         }
     }
 }
