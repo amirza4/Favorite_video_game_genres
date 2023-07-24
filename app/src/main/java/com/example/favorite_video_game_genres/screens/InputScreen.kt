@@ -268,16 +268,30 @@ class InputScreen {
             Button(
                 onClick =
                 {
-                    if(checked.any(){ it } || newOptionChecked)
+                    if(newOptionChecked)
                     {
-                        if(newOptionName.isNotBlank())
+                        if(!(newOptionName.isNullOrBlank()))
                         {
-                            dataManip.newGenreCheck(newOptionChecked, newOptionName)
+                            if(!(newOptionName.contains('.')))
                             {
-                                dataManip.updateDB(checked)
+                                if(!(dataManip.retrieveData.any { it.first.lowercase().contains(newOptionName.trim().lowercase())}))
                                 {
-                                    submitted = 2
+                                    dataManip.newGenreCheck(newOptionChecked, newOptionName)
+                                    {
+                                        dataManip.updateDB(checked)
+                                        {
+                                            submitted = 1
+                                        }
+                                    }
                                 }
+                                else
+                                {
+                                    submitted = 5
+                                }
+                            }
+                            else
+                            {
+                                submitted = 4
                             }
                         }
                         else
@@ -285,9 +299,16 @@ class InputScreen {
                             submitted = 3
                         }
                     }
+                    else if(checked.any(){ it })
+                    {
+                        dataManip.updateDB(checked)
+                        {
+                            submitted = 1
+                        }
+                    }
                     else
                     {
-                        submitted = 1
+                        submitted = 2
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -310,7 +331,7 @@ class InputScreen {
                 )
             }
 
-            if(submitted == 2)
+            if(submitted == 1)
             {
                 AlertDialog(
                     onDismissRequest = {},
@@ -326,6 +347,7 @@ class InputScreen {
                         runBlocking()
                         {
                             delay(2000)
+                            submitted = 0
                             navController.navigate("DisplayScreen")
                             {
                                 popUpTo("InputScreen")
@@ -333,18 +355,39 @@ class InputScreen {
                                     inclusive = true
                                 }
                             }
-                            submitted = 0
                         }
                     }
                 }
             }
-            else if(submitted == 1)
+            else if(submitted != 0)
             {
+                var title = ""
+                var text = ""
+                if(submitted == 2)
+                {
+                    title = "Error: No Checkboxes Selected"
+                    text = "You have not selected any votes to submit. To vote, please check the checkboxes of your favorite video game genres, or to return, click the back arrow on the top left to return to the display votes screen."
+                }
+                else if(submitted == 3)
+                {
+                    title = "Error: No Text Input For Custom Checkbox"
+                    text = "You have not entered any text for the custom genre option. To add it, please type your custom favorite video game genre."
+                }
+                else if(submitted == 4)
+                {
+                    title = "Error: Text Input For Custom Checkbox Contains a Period"
+                    text = "You have entered a period within the text for the custom genre option. Please remove it before submitting your custom favorite video game genre."
+                }
+                else if(submitted == 5)
+                {
+                    title = "Error: Text Input For Custom Checkbox Contains Duplicate"
+                    text = "You have entered duplicate text matching another option for the custom genre option. Remove it before submitting your custom favorite video game genre."
+                }
                 AlertDialog(
                     onDismissRequest ={},
                     containerColor = dataManip.bgColor,
-                    title = { Text("Error: No Checkboxes Selected", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
-                    text = { Text("You have not selected any votes to submit. To vote, please check the checkboxes of your favorite video game genres, or to return, click the back arrow on the top left to return to the display votes screen.", color = dataManip.textLDModeColor) },
+                    title = { Text(text = title, textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
+                    text = { Text(text, color = dataManip.textLDModeColor) },
                     confirmButton = {
                         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
                         {
@@ -356,26 +399,6 @@ class InputScreen {
                             }
                         }
                     },
-                )
-            }
-            else if(submitted == 3)
-            {
-                AlertDialog(
-                    onDismissRequest = {},
-                    containerColor = dataManip.bgColor,
-                    title = { Text("Error: No Text Input For Custom Checkbox", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
-                    text = { Text("You have not entered any text for the custom genre option. To add it, please type your custom favorite video game genre.", color = dataManip.textLDModeColor) },
-                    confirmButton = {
-                        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
-                        {
-                            Button(onClick = {
-                                submitted = 0
-                            })
-                            {
-                                Text(text = "Understood", textAlign = TextAlign.Center)
-                            }
-                        }
-                    }
                 )
             }
         }

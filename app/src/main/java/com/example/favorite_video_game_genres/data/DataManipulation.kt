@@ -127,23 +127,17 @@ class DataManipulation(var context: Context, var activity: Activity) {
         }
         else
         {
-            if(!(name.isNullOrBlank() || retrieveData.any { it.first.lowercase().contains(name.trim().lowercase()) } || name.contains('.')))
-            { //check if custom option is not blank, doesnt contain each other after lower case and spaces removed, or have periods
-                val cache = DataCaching.createCacheDb(context)
-                val uppercaseOption = name.split(" ").joinToString(" ") { it.replaceFirstChar { it.uppercase() } } //replace each word in string with first letter capital
-                retrieveData.add(Pair(uppercaseOption, 1))
-                CoroutineScope(Dispatchers.IO).launch()
-                {
-                    cache.userDao().writeData(Votes(retrieveData.size - 1, uppercaseOption, 1)) // create new record in cache
-                }
-                db.update(uppercaseOption, 1)
-                cache.close()
-                callback()
-            }
-            else
+            //check if custom option is not blank, doesnt contain each other after lower case and spaces removed, or have periods
+            val cache = DataCaching.createCacheDb(context)
+            val uppercaseOption = name.split(" ").joinToString(" ") { it.replaceFirstChar { it.uppercase() } } //replace each word in string with first letter capital
+            retrieveData.add(Pair(uppercaseOption, 1))
+            CoroutineScope(Dispatchers.IO).launch()
             {
-                //need to add some form of error for nulls, blanks, and copies of previous choices
+                cache.userDao().writeData(Votes(retrieveData.size - 1, uppercaseOption, 1)) // create new record in cache
             }
+            db.update(uppercaseOption, 1)
+            cache.close()
+            callback()
         }
     }
 
