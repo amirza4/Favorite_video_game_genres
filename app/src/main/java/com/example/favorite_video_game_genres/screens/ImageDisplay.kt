@@ -161,6 +161,7 @@ class ImageDisplay {
         val permissionLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { isGranted ->
+                dataManip.askingPermission = false
                 permissionGranted = isGranted // set result from permission popup
                 if(!permissionGranted)
                 {
@@ -185,6 +186,7 @@ class ImageDisplay {
 
         if(askPermissions)
         {
+            dataManip.askingPermission = true
             permissionLauncher.launch(Manifest.permission.CAMERA) // then request it
         }
 

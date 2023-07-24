@@ -344,7 +344,7 @@ class InputScreen {
                     onDismissRequest ={},
                     containerColor = dataManip.bgColor,
                     title = { Text("Error: No Checkboxes Selected", textAlign = TextAlign.Center, color = dataManip.textLDModeColor) },
-                    text = { Text("You have not selected any votes to submit. To vote, please check the checkboxes of your favorite video game genres, or to return, click the back arrow on the top right to return to the display votes screen.", color = dataManip.textLDModeColor) },
+                    text = { Text("You have not selected any votes to submit. To vote, please check the checkboxes of your favorite video game genres, or to return, click the back arrow on the top left to return to the display votes screen.", color = dataManip.textLDModeColor) },
                     confirmButton = {
                         Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center)
                         {

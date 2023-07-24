@@ -126,6 +126,7 @@ class AddImageScreen {
         val permissionLauncher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestPermission(),
             onResult = { isGranted ->
+                dataManip.askingPermission = false
                 permissionGranted = isGranted // set result from permission popup
                 if(!permissionGranted)
                 {
@@ -140,7 +141,6 @@ class AddImageScreen {
                 }
                 else
                 {
-
                     runBlocking { dataManip.updateCameraPermission(permissionGranted) }
                     navController.navigate("CameraScreen") // if allowed
                 }
@@ -150,6 +150,7 @@ class AddImageScreen {
 
         if(askPermissions)
         {
+            dataManip.askingPermission = true
             permissionLauncher.launch(Manifest.permission.CAMERA) // then request it
         }
 

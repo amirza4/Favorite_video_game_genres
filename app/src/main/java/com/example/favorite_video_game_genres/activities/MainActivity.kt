@@ -114,7 +114,10 @@ class MainActivity : ComponentActivity() {
 
     override fun onPause() {
         super.onPause()
-        hasPaused = true
+        if(!dataManip.askingPermission)
+        {
+            hasPaused = true
+        }
     }
 
     override fun onResume() {

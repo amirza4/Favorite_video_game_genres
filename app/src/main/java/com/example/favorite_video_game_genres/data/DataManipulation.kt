@@ -32,6 +32,7 @@ class DataManipulation(var context: Context, var activity: Activity) {
     var textLDModeColor by mutableStateOf(Color.Black)
     var bgColor by mutableStateOf(Color.White)
     var deviceRotation by mutableStateOf(0)
+    var askingPermission by mutableStateOf(false)
     val db = FirebaseFirestore.getInstance().collection("game_counts").document("84c8g5rVr8KJliP4108c")
 
     fun fetchFromFireBase(callback: () -> Unit) {
